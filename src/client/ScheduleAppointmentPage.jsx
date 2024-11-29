@@ -8,13 +8,14 @@ const ScheduleAppointmentPage = () => {
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [error, setError] = useState(null);
+  const [successMessage] = useState(null);
 
-  // Fetch counselors when the component mounts
   useEffect(() => {
+    // Fetch counselors from the backend
     axios
-      .get("http://localhost:5000/api/counselor")  // Make a GET request to fetch counselors
+      .get("http://localhost:5000/api/counselor")
       .then((response) => {
-        setCounselors(response.data);  // Set counselors state with the response data
+        setCounselors(response.data);
       })
       .catch((error) => {
         console.error("Error fetching counselors:", error);
@@ -24,32 +25,34 @@ const ScheduleAppointmentPage = () => {
 
   const handleSubmit = () => {
     const appointmentData = {
-      counselorId: selectedCounselor,
+      counselorId: selectedCounselor,  // Ensure this is correctly populated
       sessionType,
       date,
       time,
-      clientId: "12345", // Replace with actual clientId logic
     };
-
+    
+  
+    console.log('Sending appointment data:', appointmentData); // Log the data
+    
     axios
-      .post("http://localhost:5000/api/schedule-appointment", appointmentData)
-      .then(() => {
-        alert("Appointment scheduled successfully!");
-      })
-      .catch((error) => {
-        console.error("Error scheduling appointment:", error);
-        alert("Failed to schedule the appointment. Try again.");
-      });
-  };
+    .post("http://localhost:5000/api/schedule-appointment", appointmentData)
+    .then(() => {
+      alert("Appointment scheduled successfully!");
+    })
+    .catch((error) => {
+      console.error("Error scheduling appointment:", error.response ? error.response.data : error);
+      alert("Failed to schedule the appointment. Try again.");
+    });
+};
 
   return (
     <div className="bg-gradient-to-b from-blue-100 to-blue-300 min-h-screen flex items-center justify-center">
       <div className="bg-white shadow-lg rounded-lg p-8 max-w-md w-full">
-        <h1 className="text-2xl font-bold text-center text-blue-600 mb-4">
-          Schedule Appointment
-        </h1>
+        <h1 className="text-2xl font-bold text-center text-blue-600 mb-4">Schedule Appointment</h1>
+
         {error && <p className="text-red-500 text-center">{error}</p>}
-        
+        {successMessage && <p className="text-green-500 text-center">{successMessage}</p>}
+
         <div className="mb-4">
           <label className="block font-semibold mb-2">Select Counselor</label>
           <select

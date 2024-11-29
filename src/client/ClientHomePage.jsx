@@ -30,7 +30,7 @@ const ClientHomePage = () => {
 
           {/* Session Notes Link */}
           <Link
-            to="/session-notes"
+            to="/client-session-notes"
             className="flex items-center justify-center bg-gradient-to-r from-yellow-500 to-yellow-600 text-white font-bold py-4 px-6 rounded-lg shadow-lg hover:scale-105 transform transition-all duration-300 ease-in-out"
           >
             <span className="text-lg">Session Notes</span>

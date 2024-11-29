@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
@@ -8,18 +9,21 @@ const CounselorHomePage = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios
-      .get('http://localhost:5000/api/appointments') // Modify as per your actual route
-      .then((response) => {
+    const fetchAppointments = async () => {
+      setLoading(true);
+      try {
+        const response = await axios.get('http://localhost:5000/api/appointments');  // Fetching all appointments
         setAppointments(response.data);
         setLoading(false);
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error('Error fetching appointments:', error);
         setError('Unable to load appointments. Please try again later.');
         setLoading(false);
-      });
-  }, []);
+      }
+    };
+
+    fetchAppointments();
+  }, []);  // Empty dependency array ensures it runs only once when the component mounts
 
   return (
     <div className="counselor-home-page max-w-4xl mx-auto my-8 p-6 bg-white shadow-lg rounded-lg">
@@ -44,7 +48,6 @@ const CounselorHomePage = () => {
                     >
                       Join Video Call
                     </button>
-
                   );
                   break;
                 case 'chat':
@@ -96,7 +99,7 @@ const CounselorHomePage = () => {
 
                   <div className="flex flex-wrap gap-4">
                     <Link
-                      to={`/session-notes/${appointment._id}`}
+                      to={`/session-notes`}
                       className="bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600"
                     >
                       Session Notes
@@ -104,7 +107,6 @@ const CounselorHomePage = () => {
                     {actionButton}
                   </div>
                 </div>
-
               );
             })}
           </div>

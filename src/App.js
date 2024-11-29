@@ -13,7 +13,8 @@ import ChatPage from './components/ChatPage';
 import AppointmentDetails from './client/AppointmentDetails';
 import CounselorHomePage from "./counselor/CounselorHomePage";
 import ClientSessionNotesPage from './client/SessionNotesPage';
-
+import PaymentSuccessPage from './components/PaymentSuccessPage'; // The payment success page
+import PaymentCancelPage from './components/PaymentCancelPage'; 
 const App = () => {
   return (
     <Router>
@@ -22,15 +23,24 @@ const App = () => {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/signup" element={<SignupPage />} />
+          
+          {/* Client Routes */}
           <Route path="/client-home" element={<ClientHomePage />} />
           <Route path="/appointments" element={<AppointmentListPage />} />
           <Route path="/schedule-appointment" element={<ScheduleAppointmentPage />} />
-          <Route path="/session-notes/:appointmentId" element={<SessionNotesPage />} />
-          <Route path="/payment" element={<PaymentPage />} />
-          <Route path="/video-call/:roomId" element={<VideoCallPage />} />          <Route path="/chat/:appointmentId" element={<ChatPage />} />
-          <Route path="/appointments/:appointmentId" element={<AppointmentDetails />} />
-          <Route path="/counselor-home" element={<CounselorHomePage />} />
           <Route path="/client-session-notes" element={<ClientSessionNotesPage />} />
+          <Route path="/payment" element={<PaymentPage />} />
+          <Route path="/appointments/:appointmentId" element={<AppointmentDetails />} />
+          
+          {/* Video Call and Chat Routes */}
+          <Route path="/video-call/:roomId" element={<VideoCallPage />} />
+          <Route path="/chat/:appointmentId" element={<ChatPage />} />
+          
+          {/* Counselor Routes */}
+          <Route path="/counselor-home" element={<CounselorHomePage />} />
+          <Route path="/session-notes" element={<SessionNotesPage />} />
+          <Route path="/payment-success" component={PaymentSuccessPage} />
+        <Route path="/payment-cancel" component={PaymentCancelPage} />
 
         </Routes>
       </div>

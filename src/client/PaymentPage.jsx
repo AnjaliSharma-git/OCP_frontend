@@ -66,9 +66,7 @@ const PaymentPage = () => {
         </div>
         <button
           onClick={handlePayment}
-          className={`w-full bg-green-500 text-white font-bold py-2 px-4 rounded-lg ${
-            loading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-green-600'
-          } transition`}
+          className={`w-full bg-green-500 text-white font-bold py-2 px-4 rounded-lg ${loading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-green-600'} transition`}
           disabled={loading}
         >
           {loading ? 'Processing...' : 'Process Payment'}

@@ -5,8 +5,15 @@ const EmailPage = () => {
   const { counselorEmail } = useParams(); // Counselor's email address
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
 
   const sendEmail = () => {
+    if (!subject.trim() || !message.trim()) {
+      setError("Subject and Message are required.");
+      return;
+    }
+
+    setError(""); // Clear previous errors
     window.open(
       `mailto:${counselorEmail}?subject=${encodeURIComponent(
         subject
@@ -19,6 +26,7 @@ const EmailPage = () => {
     <div className="email-page bg-gradient-to-b from-yellow-100 to-yellow-300 min-h-screen flex flex-col items-center justify-center">
       <h1 className="text-3xl font-bold text-yellow-600 mb-4">Send Email</h1>
       <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-md">
+        {error && <p className="text-red-500 mb-4">{error}</p>}
         <div className="mb-4">
           <label className="block font-semibold mb-2">Subject</label>
           <input

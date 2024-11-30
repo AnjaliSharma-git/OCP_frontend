@@ -2,22 +2,18 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const PaymentCancelPage = () => {
-  const navigate = useNavigate(); // Replacing useHistory with useNavigate
+  const navigate = useNavigate(); 
 
-  // Logic to handle cancellation or show appropriate messages
   const handleCancel = () => {
-    // Optionally perform other actions on cancel, like logging, updating status, etc.
-    // After cancellation, navigate to a different page
-    navigate('/home'); // Redirecting user to home or some other page
+    navigate('/home'); 
   };
 
-  // Optional: Redirect user after a delay
   useEffect(() => {
     const timer = setTimeout(() => {
-      navigate('/home'); // Redirect automatically after 3 seconds if not clicked
+      navigate('/home'); 
     }, 3000);
     
-    return () => clearTimeout(timer); // Cleanup the timer on component unmount
+    return () => clearTimeout(timer); 
   }, [navigate]);
 
   return (

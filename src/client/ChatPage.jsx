@@ -10,7 +10,7 @@ const ChatPage = ({ appointmentId }) => {
   useEffect(() => {
     const fetchMessages = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/chat/${appointmentId}`);
+        const response = await axios.get(`https://ocp-backend-oman.onrender.com/api/chat/${appointmentId}`);
         setMessages(response.data.messages); // Update messages from the API response
       } catch (error) {
         console.error('Error fetching chat messages:', error.message);
@@ -27,7 +27,7 @@ const ChatPage = ({ appointmentId }) => {
   const handleSendMessage = async () => {
     if (newMessage.trim()) {
       try {
-        const response = await axios.post('http://localhost:5000/api/chat', {
+        const response = await axios.post('https://ocp-backend-oman.onrender.com/api/chat', {
           appointmentId,
           sender: 'client', // Replace with dynamic sender info if needed
           message: newMessage,

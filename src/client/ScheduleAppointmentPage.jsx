@@ -35,7 +35,7 @@ const ScheduleAppointmentPage = () => {
   
       // Proceed to fetch counselors if token is valid
       axios
-        .get('http://localhost:5000/api/counselors')
+        .get('https://ocp-backend-oman.onrender.com/api/counselors')
         .then((response) => {
           setCounselors(response.data);
           setLoading(false);
@@ -93,7 +93,7 @@ const ScheduleAppointmentPage = () => {
   
     try {
       const response = await axios.post(
-        'http://localhost:5000/api/schedule-appointment',
+        'https://ocp-backend-oman.onrender.com/api/schedule-appointment',
         {
           counselor: counselorId, // Corrected from counselorId to counselor
           sessionType,

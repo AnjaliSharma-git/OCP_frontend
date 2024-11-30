@@ -19,7 +19,7 @@ const ChatPage = () => {
   
     // Fetch chat messages for the given appointmentId with the token in the headers
     axios
-      .get(`http://localhost:5000/api/chat/${appointmentId}`, {
+      .get(`https://ocp-backend-oman.onrender.com/api/chat/${appointmentId}`, {
         headers: {
           Authorization: `Bearer ${token}`,  // Send the token in the Authorization header
         },
@@ -53,7 +53,7 @@ const ChatPage = () => {
 
     axios
       .post(
-        `http://localhost:5000/api/chat/${appointmentId}`,
+        `https://ocp-backend-oman.onrender.com/api/chat/${appointmentId}`,
         { message: newMessage },
         {
           headers: {

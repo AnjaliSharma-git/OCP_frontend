@@ -30,7 +30,7 @@ const SessionNotesPage = () => {
 
     try {
       const response = await axios.post(
-        `http://localhost:5000/api/session-notes/${appointmentId}`,
+        `https://ocp-backend-oman.onrender.com/api/session-notes/${appointmentId}`,
         formData,
         {
           headers: { 'Content-Type': 'multipart/form-data' },

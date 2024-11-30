@@ -21,7 +21,7 @@ const PaymentPage = () => {
 
     try {
       // Call backend to create a Checkout Session (not a PaymentIntent)
-      const response = await axios.post('http://localhost:5000/api/create-checkout-session', { amount });
+      const response = await axios.post('https://ocp-backend-oman.onrender.com/api/create-checkout-session', { amount });
 
       // Log the response to check what the backend sends back
       console.log('Backend Response:', response.data);

@@ -12,7 +12,7 @@ const CounselorHomePage = () => {
     const fetchAppointments = async () => {
       setLoading(true);
       try {
-        const response = await axios.get('http://localhost:5000/api/appointments');
+        const response = await axios.get('https://ocp-backend-oman.onrender.com/api/appointments');
         setAppointments(response.data);
         setLoading(false);
       } catch (error) {

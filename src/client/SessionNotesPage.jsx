@@ -17,7 +17,7 @@ const ClientSessionNotesPage = () => {
           throw new Error('You must be logged in to view session notes.');
         }
 
-        const response = await axios.get('http://localhost:5000/api/session-notes', {
+        const response = await axios.get('https://ocp-backend-oman.onrender.com/api/session-notes', {
           headers: { Authorization: `Bearer ${token}` }, // Include token in the Authorization header
         });
 
@@ -61,7 +61,7 @@ const ClientSessionNotesPage = () => {
               {/* Render file attachment if available */}
               {note.file && (
                 <a
-                  href={`http://localhost:5000/uploads/${note.file}`} // Adjust this path if necessary
+                  href={`https://ocp-backend-oman.onrender.com/uploads/${note.file}`} // Adjust this path if necessary
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-blue-500 underline hover:text-blue-700"

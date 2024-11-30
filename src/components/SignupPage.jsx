@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import {jwtDecode} from "jwt-decode"; // Ensure jwtDecode is imported correctly
+import {jwtDecode} from "jwt-decode"; 
 
 const SignupPage = () => {
   const [isLoginMode, setIsLoginMode] = useState(false);
@@ -53,8 +53,8 @@ const SignupPage = () => {
 
     try {
       const endpoint = isLoginMode
-        ? `http://localhost:5000/auth/login-${role}`
-        : `http://localhost:5000/auth/register-${role}`;
+        ? `https://ocp-backend-oman.onrender.com/auth/login-${role}`
+        : `https://ocp-backend-oman.onrender.com/auth/register-${role}`;
 
       console.log("Sending request to:", endpoint);
       console.log("Form data:", formData);

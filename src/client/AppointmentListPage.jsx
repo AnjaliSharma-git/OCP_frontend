@@ -20,7 +20,7 @@ const AppointmentsPage = () => {
           return;
         }
 
-        const url = 'http://localhost:5000/api/appointments'; // Endpoint to fetch all appointments
+        const url = 'https://ocp-backend-oman.onrender.com/api/appointments'; // Endpoint to fetch all appointments
 
         // Send request to fetch appointments with the token in Authorization header
         const response = await axios.get(url, {

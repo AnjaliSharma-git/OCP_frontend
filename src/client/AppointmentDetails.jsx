@@ -11,7 +11,7 @@ const AppointmentDetails = () => {
   useEffect(() => {
     // Fetch the appointment details from the backend
     axios
-      .get(`http://localhost:5000/api/appointments/${appointmentId}`)
+      .get(`https://ocp-backend-oman.onrender.com/api/appointments/${appointmentId}`)
       .then((response) => {
         setAppointment(response.data); // Set the appointment data
         setLoading(false); // Stop loading

@@ -2,22 +2,18 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const PaymentSuccessPage = () => {
-  const navigate = useNavigate(); // Replacing useHistory with useNavigate
+  const navigate = useNavigate(); 
 
-  // Logic to handle success or show appropriate messages
   const handleSuccess = () => {
-    // Optionally perform other actions on success, like logging, updating payment status, etc.
-    // After success, navigate to a "Thank You" page or order details page
-    navigate('/thank-you'); // Redirect user to the thank you page
+    navigate('/thank-you'); 
   };
 
-  // Optional: Redirect user automatically after a delay
   useEffect(() => {
     const timer = setTimeout(() => {
-      navigate('/thank-you'); // Redirect to thank you page after 5 seconds if not clicked
+      navigate('/thank-you'); 
     }, 5000);
     
-    return () => clearTimeout(timer); // Cleanup the timer on component unmount
+    return () => clearTimeout(timer); 
   }, [navigate]);
 
   return (

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'; 
 import axios from 'axios';
-import {jwtDecode} from 'jwt-decode';  // Corrected import for jwt-decode
+import {jwtDecode} from 'jwt-decode';  
 
 const ScheduleAppointmentPage = () => {
   const [counselorId, setCounselorId] = useState('');
@@ -13,7 +13,6 @@ const ScheduleAppointmentPage = () => {
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Fetch counselors from backend
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) {
@@ -25,7 +24,7 @@ const ScheduleAppointmentPage = () => {
   
     try {
       const decodedToken = jwtDecode(token);
-      console.log('Decoded Token:', decodedToken); // Debug: Inspect token structure
+      console.log('Decoded Token:', decodedToken); 
       if (!decodedToken || !decodedToken.id) {
         console.error('Decoded token is invalid or missing client ID!');
         setError('Invalid token. Please log in again.');
@@ -33,7 +32,6 @@ const ScheduleAppointmentPage = () => {
         return;
       }
   
-      // Proceed to fetch counselors if token is valid
       axios
         .get('https://ocp-backend-oman.onrender.com/api/counselors')
         .then((response) => {
@@ -53,7 +51,6 @@ const ScheduleAppointmentPage = () => {
   }, []);
   
 
-  // Automatically clear messages after 5 seconds
   useEffect(() => {
     if (error || successMessage) {
       const timeout = setTimeout(() => {
@@ -64,7 +61,6 @@ const ScheduleAppointmentPage = () => {
     }
   }, [error, successMessage]);
 
-  // Validate date and time
   const validateDateTime = () => {
     const selectedDateTime = new Date(`${date}T${time}`);
     const now = new Date();
@@ -95,7 +91,7 @@ const ScheduleAppointmentPage = () => {
       const response = await axios.post(
         'https://ocp-backend-oman.onrender.com/api/schedule-appointment',
         {
-          counselor: counselorId, // Corrected from counselorId to counselor
+          counselor: counselorId,
           sessionType,
           date,
           time,
@@ -150,7 +146,6 @@ const ScheduleAppointmentPage = () => {
           )}
         </div>
 
-        {/* Session Type Dropdown */}
         <div className="mb-4">
           <label htmlFor="sessionType" className="block text-gray-700">Session Type</label>
           <select
@@ -166,7 +161,6 @@ const ScheduleAppointmentPage = () => {
           </select>
         </div>
 
-        {/* Date Input */}
         <div className="mb-4">
           <label htmlFor="date" className="block text-gray-700">Date</label>
           <input
@@ -178,7 +172,6 @@ const ScheduleAppointmentPage = () => {
           />
         </div>
 
-        {/* Time Input */}
         <div className="mb-4">
           <label htmlFor="time" className="block text-gray-700">Time</label>
           <input
@@ -190,7 +183,6 @@ const ScheduleAppointmentPage = () => {
           />
         </div>
 
-        {/* Submit Button */}
         <div className="flex justify-center">
           <button
             type="submit"

@@ -3,18 +3,16 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 
 const SessionNotesPage = () => {
-  const { appointmentId } = useParams(); // Get the appointmentId from the URL
+  const { appointmentId } = useParams(); 
   const [notes, setNotes] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
   const [saveMessage, setSaveMessage] = useState('');
-  const [loading, setLoading] = useState(false); // Add loading state
+  const [loading, setLoading] = useState(false);
 
-  // Handle file input change
   const handleFileChange = (e) => {
     setSelectedFile(e.target.files[0]);
   };
 
-  // Handle save notes functionality
   const handleSaveNotes = async () => {
     if (!notes.trim()) {
       setSaveMessage('Please enter some notes before saving.');
@@ -22,11 +20,11 @@ const SessionNotesPage = () => {
     }
 
     setSaveMessage('');
-    setLoading(true); // Start loading
+    setLoading(true);
 
     const formData = new FormData();
-    formData.append('file', selectedFile); // Attach the file if provided
-    formData.append('notes', notes); // Attach the notes text
+    formData.append('file', selectedFile); 
+    formData.append('notes', notes); 
 
     try {
       const response = await axios.post(
@@ -39,14 +37,13 @@ const SessionNotesPage = () => {
       setSaveMessage('Notes saved successfully!');
       console.log('Notes saved:', response.data);
 
-      // Optionally clear the form after saving
       setNotes('');
       setSelectedFile(null);
     } catch (err) {
       console.error('Error saving notes:', err);
       setSaveMessage('Failed to save notes. Please try again.');
     } finally {
-      setLoading(false); // End loading
+      setLoading(false); 
     }
   };
 
@@ -79,7 +76,7 @@ const SessionNotesPage = () => {
       <button
         onClick={handleSaveNotes}
         className={`bg-green-500 text-white py-2 px-4 rounded-lg mt-4 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
-        disabled={loading} // Disable the button while loading
+        disabled={loading} 
       >
         {loading ? 'Saving...' : 'Save Notes'}
       </button>

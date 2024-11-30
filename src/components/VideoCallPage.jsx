@@ -3,7 +3,7 @@ import JitsiMeetExternalAPI from 'lib-jitsi-meet';
 
 const VideoCallPage = ({ match }) => {
   const containerRef = useRef(null);
-  const roomId = match.params.roomId; // Extract room ID from the route
+  const roomId = match.params.roomId; 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -26,14 +26,13 @@ const VideoCallPage = ({ match }) => {
 
         api.addEventListener('videoConferenceJoined', () => {
           console.log('Joined the video conference room:', roomId);
-          setLoading(false);  // Stop loading once the video conference is joined
+          setLoading(false);  
         });
 
         api.addEventListener('videoConferenceLeft', () => {
           console.log('Left the video conference room:', roomId);
         });
 
-        // Cleanup when the component unmounts or roomId changes
         return () => {
           if (api) {
             api.dispose();

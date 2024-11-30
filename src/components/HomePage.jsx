@@ -3,7 +3,6 @@ import React from "react";
 const HomePage = () => {
   return (
     <div className="bg-gradient-to-t from-purple-400 to-pink-50 min-h-screen mt-0">
-      {/* Hero Section */}
       <header className="relative  text-gray-800 py-16 px-4 text-center h-[500px] pt-[150px]">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-5xl font-extrabold leading-tight mb-4">
@@ -26,7 +25,6 @@ const HomePage = () => {
         </div>
       </header>
 
-      {/* Features Section */}
       <section className="py-16 px-4 mt-[70px] ">
         <div className="max-w-6xl mx-auto text-center">
           <h2 className="text-4xl font-extrabold mb-6 text-yellow-600">
@@ -65,7 +63,6 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* Footer */}
       <footer className="bg-gray-800 text-gray-200 py-6 text-center">
         <div className="max-w-4xl mx-auto">
           <p className="text-sm mb-2">

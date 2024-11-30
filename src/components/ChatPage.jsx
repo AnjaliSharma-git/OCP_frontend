@@ -10,18 +10,17 @@ const ChatPage = () => {
   const chatContainerRef = useRef(null);
 
   useEffect(() => {
-    const token = sessionStorage.getItem('token');  // Get the token from sessionStorage
+    const token = sessionStorage.getItem('token');  
   
     if (!token) {
       setError('Unauthorized: No token found');
       return;
     }
   
-    // Fetch chat messages for the given appointmentId with the token in the headers
     axios
       .get(`https://ocp-backend-oman.onrender.com/api/chat/${appointmentId}`, {
         headers: {
-          Authorization: `Bearer ${token}`,  // Send the token in the Authorization header
+          Authorization: `Bearer ${token}`,  
         },
       })
       .then((response) => {
@@ -35,7 +34,6 @@ const ChatPage = () => {
   
 
   useEffect(() => {
-    // Scroll to bottom whenever messages change
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
     }
@@ -44,7 +42,7 @@ const ChatPage = () => {
   const handleSendMessage = () => {
     if (!newMessage.trim()) return;
 
-    const token = sessionStorage.getItem('token'); // Retrieve the token from sessionStorage
+    const token = sessionStorage.getItem('token'); 
 
     if (!token) {
       setError('Unauthorized: No token found');
@@ -57,7 +55,7 @@ const ChatPage = () => {
         { message: newMessage },
         {
           headers: {
-            Authorization: `Bearer ${token}`,  // Send the token when posting a message
+            Authorization: `Bearer ${token}`,  
           },
         }
       )

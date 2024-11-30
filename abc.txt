@@ -1,1 +1,0 @@
-for appointment booking give a dropdown for counselor with his information like speciality, experience and availability

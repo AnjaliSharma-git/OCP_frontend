@@ -3,26 +3,24 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
 const AppointmentDetails = () => {
-  const { appointmentId } = useParams(); // Fetch appointmentId from the URL
-  const [appointment, setAppointment] = useState(null); // Holds appointment details
-  const [error, setError] = useState(null); // Error state
-  const [loading, setLoading] = useState(true); // Loading state
+  const { appointmentId } = useParams(); 
+  const [appointment, setAppointment] = useState(null); 
+  const [error, setError] = useState(null); 
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Fetch the appointment details from the backend
     axios
       .get(`https://ocp-backend-oman.onrender.com/api/appointments/${appointmentId}`)
       .then((response) => {
-        setAppointment(response.data); // Set the appointment data
-        setLoading(false); // Stop loading
+        setAppointment(response.data); 
+        setLoading(false);
       })
       .catch((error) => {
         console.error('Error fetching appointment:', error);
-        setError('Unable to fetch appointment details. Please try again later.'); // Set error message
+        setError('Unable to fetch appointment details. Please try again later.'); 
         setLoading(false);
       });
-  }, [appointmentId]); // Dependency array includes appointmentId to re-fetch if it changes
-
+  }, [appointmentId]); 
   if (loading) {
     return <p className="text-center text-gray-500">Loading appointment details...</p>;
   }

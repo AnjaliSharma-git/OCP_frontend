@@ -2,17 +2,16 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const AppointmentsPage = () => {
-  const [appointments, setAppointments] = useState([]); // Holds the list of appointments
-  const [error, setError] = useState(null); // Handles error state
-  const [loading, setLoading] = useState(true); // Handles loading state
+  const [appointments, setAppointments] = useState([]); 
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true); 
 
-  // useEffect to fetch appointments when the component mounts
   useEffect(() => {
     const fetchAppointments = async () => {
-      setLoading(true); // Start loading
+      setLoading(true); 
 
       try {
-        const token = localStorage.getItem('token'); // Retrieve token from localStorage (or wherever it's stored)
+        const token = localStorage.getItem('token'); 
 
         if (!token) {
           setError('No token found. Please log in.');
@@ -20,55 +19,53 @@ const AppointmentsPage = () => {
           return;
         }
 
-        const url = 'https://ocp-backend-oman.onrender.com/api/appointments'; // Endpoint to fetch all appointments
+        const url = 'https://ocp-backend-oman.onrender.com/api/appointments';
 
-        // Send request to fetch appointments with the token in Authorization header
+       
         const response = await axios.get(url, {
           headers: {
-            Authorization: `Bearer ${token}`, // Attach the token in Authorization header
+            Authorization: `Bearer ${token}`, 
           },
         });
 
         if (response.data && response.data.length > 0) {
-          setAppointments(response.data); // Set appointments if found
+          setAppointments(response.data); 
         } else {
-          setError('No appointments found.'); // Handle case where no appointments are found
+          setError('No appointments found.'); 
         }
-        setLoading(false); // Stop loading
+        setLoading(false); 
       } catch (error) {
         console.error('Error fetching appointments:', error);
-        setError('Unable to load appointments. Please try again later.'); // Handle API errors
+        setError('Unable to load appointments. Please try again later.');
         setLoading(false);
       }
     };
 
-    fetchAppointments(); // Fetch appointments when the component mounts
-  }, []); // Empty dependency array ensures it's only called once when the component mounts
+    fetchAppointments(); 
+  }, []); 
 
-  // Handle navigation for different session types
   const handleNavigation = (sessionType, appointmentId) => {
     if (!appointmentId) {
       alert('Invalid appointment ID.');
       return;
     }
 
-    const appointment = appointments.find(appt => appt._id === appointmentId); // Find the appointment by ID
+    const appointment = appointments.find(appt => appt._id === appointmentId); 
 
     if (!appointment) {
       alert('Appointment not found.');
       return;
     }
 
-    // Handle session type navigation
     switch (sessionType) {
       case 'video_call':
-        window.open(`https://meet.jit.si/${appointmentId}`, '_blank'); // Open Jitsi video call
+        window.open(`https://meet.jit.si/${appointmentId}`, '_blank'); 
         break;
       case 'chat':
-        window.location.href = `/chat/${appointmentId}`; // Redirect to chat page
+        window.location.href = `/chat/${appointmentId}`; 
         break;
       case 'email':
-        window.location.href = `mailto:${appointment.counselor.email}`; // Open email client
+        window.location.href = `mailto:${appointment.counselor.email}`;
         break;
       default:
         alert('Invalid session type.');
@@ -79,9 +76,7 @@ const AppointmentsPage = () => {
     <div className="appointments-page max-w-4xl mx-auto my-8 p-6 bg-white shadow-lg rounded-lg">
       <h1 className="text-3xl font-semibold text-center text-blue-600 mb-6">Scheduled Appointments</h1>
 
-      {/* Display error if there is one */}
       {error && <p className="text-red-500 text-center mb-4">{error}</p>}
-      {/* Display loading text while data is being fetched */}
       {loading && <p className="text-center text-gray-500">Loading appointments...</p>}
 
       <div className="appointments-list">
@@ -104,7 +99,6 @@ const AppointmentsPage = () => {
                     onClick={() => handleNavigation(appointment.sessionType, appointment._id)}
                     className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600"
                   >
-                    {/* Conditional rendering for button text based on session type */}
                     {appointment.sessionType === 'video_call' && 'Join Video Call'}
                     {appointment.sessionType === 'chat' && 'Start Chat'}
                     {appointment.sessionType === 'email' && 'Send Email'}
@@ -114,7 +108,6 @@ const AppointmentsPage = () => {
             ))}
           </div>
         ) : (
-          // Display message if no appointments are found
           !loading && <p className="text-center text-gray-500">No appointments scheduled yet.</p>
         )}
       </div>

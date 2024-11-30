@@ -2,16 +2,15 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const ChatPage = ({ appointmentId }) => {
-  const [messages, setMessages] = useState([]); // Store the chat messages
-  const [newMessage, setNewMessage] = useState(''); // Store the input value for the new message
-  const [error, setError] = useState(null); // Store error messages
+  const [messages, setMessages] = useState([]); 
+  const [newMessage, setNewMessage] = useState(''); 
+  const [error, setError] = useState(null); 
 
-  // Fetch chat messages for a specific appointment
   useEffect(() => {
     const fetchMessages = async () => {
       try {
         const response = await axios.get(`https://ocp-backend-oman.onrender.com/api/chat/${appointmentId}`);
-        setMessages(response.data.messages); // Update messages from the API response
+        setMessages(response.data.messages);
       } catch (error) {
         console.error('Error fetching chat messages:', error.message);
         setError('Unable to load chat messages.');
@@ -19,21 +18,20 @@ const ChatPage = ({ appointmentId }) => {
     };
 
     if (appointmentId) {
-      fetchMessages(); // Fetch messages when the appointmentId is available
+      fetchMessages();
     }
   }, [appointmentId]);
 
-  // Handle sending a new message
   const handleSendMessage = async () => {
     if (newMessage.trim()) {
       try {
         const response = await axios.post('https://ocp-backend-oman.onrender.com/api/chat', {
           appointmentId,
-          sender: 'client', // Replace with dynamic sender info if needed
+          sender: 'client', 
           message: newMessage,
         });
-        setMessages((prev) => [...prev, response.data]); // Add the new message to the state
-        setNewMessage(''); // Reset the input field
+        setMessages((prev) => [...prev, response.data]); 
+        setNewMessage('');
       } catch (error) {
         console.error('Error sending message:', error.message);
         setError('Unable to send your message.');
@@ -45,10 +43,8 @@ const ChatPage = ({ appointmentId }) => {
     <div className="chat-page max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg">
       <h1 className="text-2xl font-semibold text-center text-blue-600 mb-6">Chat with Counselor</h1>
 
-      {/* Display any errors */}
       {error && <p className="text-red-500 text-center mb-4">{error}</p>}
 
-      {/* Display messages */}
       <div className="chat-messages mb-4 max-h-96 overflow-y-auto p-4 bg-gray-50 rounded-lg shadow-sm">
         {messages.length > 0 ? (
           messages.map((msg) => (
@@ -61,7 +57,6 @@ const ChatPage = ({ appointmentId }) => {
         )}
       </div>
 
-      {/* Input for typing messages */}
       <div className="chat-input flex items-center space-x-2">
         <input
           type="text"

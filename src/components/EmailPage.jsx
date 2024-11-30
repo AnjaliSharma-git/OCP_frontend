@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 
 const EmailPage = () => {
-  const { counselorEmail } = useParams(); // Counselor's email address
+  const { counselorEmail } = useParams(); 
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
@@ -13,7 +13,7 @@ const EmailPage = () => {
       return;
     }
 
-    setError(""); // Clear previous errors
+    setError("");
     window.open(
       `mailto:${counselorEmail}?subject=${encodeURIComponent(
         subject

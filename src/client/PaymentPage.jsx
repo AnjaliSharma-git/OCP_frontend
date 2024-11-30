@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 import axios from 'axios';
 
-// Load Stripe with your publishable key
 const stripePromise = loadStripe('pk_test_51QMP7DFT9hueBpGe0U3MBposgvd1Kv3FL7DBt6bU4LAbkHMeiGvMx8jBRuDDOwFlonK2jbss2hazWDTRejnTRYDZ00mCb9szVH');
 
 const PaymentPage = () => {
@@ -20,10 +19,8 @@ const PaymentPage = () => {
     setError(null);
 
     try {
-      // Call backend to create a Checkout Session (not a PaymentIntent)
       const response = await axios.post('https://ocp-backend-oman.onrender.com/api/create-checkout-session', { amount });
 
-      // Log the response to check what the backend sends back
       console.log('Backend Response:', response.data);
 
       const { sessionId } = response.data;
@@ -33,10 +30,9 @@ const PaymentPage = () => {
         return;
       }
 
-      // Redirect to Stripe Checkout with the sessionId received from backend
       const stripe = await stripePromise;
       const { error: stripeError } = await stripe.redirectToCheckout({
-        sessionId: sessionId,  // Use sessionId for Stripe Checkout
+        sessionId: sessionId,  
       });
 
       if (stripeError) {

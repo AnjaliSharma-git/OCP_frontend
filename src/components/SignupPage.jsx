@@ -61,25 +61,21 @@ const SignupPage = () => {
 
       const response = await axios.post(endpoint, formData);
       
-      // Handle login success
       const { message, token, user } = response.data;
       if (message.includes('logged in successfully')) {
         localStorage.setItem('token', token);
         localStorage.setItem('user', JSON.stringify(user));
 
-        // Decode JWT token
         const decodedToken = jwtDecode(token);
-        sessionStorage.setItem("userId", decodedToken.id); // Store the user ID in sessionStorage
+        sessionStorage.setItem("userId", decodedToken.id); 
         
-        // Navigation after successful login
         setTimeout(() => {
-          // Ensure the page navigates to the correct path after login
           if (role === "client") {
-            navigate("/client-home");  // Update this path if necessary
+            navigate("/client-home");  
           } else {
-            navigate("/counselor-home"); // Update this path if necessary
+            navigate("/counselor-home"); 
           }
-        }, 100);  // Delay to ensure the state and token are updated
+        }, 100);  
       }
     } catch (error) {
       console.error("Error:", error.response?.data || error.message);
@@ -94,7 +90,6 @@ const SignupPage = () => {
           {isLoginMode ? "Login" : "Register"}
         </h1>
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Role selection */}
           <div className="mb-4">
             <label className="block text-gray-700 font-medium mb-1">Are you a:</label>
             <div className="flex space-x-4">
@@ -123,7 +118,6 @@ const SignupPage = () => {
             </div>
           </div>
 
-          {/* Name input */}
           {!isLoginMode && role === "client" && (
             <div>
               <label className="block text-gray-700 font-medium mb-1">Full Name</label>
@@ -138,7 +132,6 @@ const SignupPage = () => {
             </div>
           )}
 
-          {/* Email and Password inputs */}
           <div>
             <label className="block text-gray-700 font-medium mb-1">Email</label>
             <input
@@ -162,7 +155,6 @@ const SignupPage = () => {
             {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
           </div>
 
-          {/* Counselor-specific fields */}
           {role === "counselor" && !isLoginMode && (
             <>
               <div>
@@ -190,7 +182,6 @@ const SignupPage = () => {
             </>
           )}
 
-          {/* Submit button */}
           <button
             type="submit"
             className="w-full bg-pink-500 text-white py-2 px-4 rounded-lg font-medium"
@@ -199,7 +190,6 @@ const SignupPage = () => {
           </button>
         </form>
 
-        {/* Toggle between login and register */}
         <p className="text-center text-sm mt-4">
           {isLoginMode ? "Don't have an account? " : "Already have an account? "}
           <button onClick={() => setIsLoginMode(!isLoginMode)} className="text-pink-500 hover:text-pink-600 font-semibold">

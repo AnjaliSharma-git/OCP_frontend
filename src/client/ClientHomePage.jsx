@@ -2,11 +2,10 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 const ClientHomePage = () => {
-  const userName = "John"; // Replace with dynamic data if available
+  const userName = "John"; 
 
   return (
     <div className="bg-gradient-to-b from-blue-50 to-blue-300 min-h-screen flex flex-col items-center justify-center py-12 px-6 relative">
-      {/* Logout Button */}
       <Link
         to="/logout"
         className="absolute top-4 right-4 text-red-500 font-medium hover:underline"
@@ -26,7 +25,6 @@ const ClientHomePage = () => {
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          {/* View Appointments Link */}
           <Link
             to="/appointments"
             aria-label="View your appointments"
@@ -35,7 +33,6 @@ const ClientHomePage = () => {
             <span className="text-lg">View Appointments</span>
           </Link>
 
-          {/* Schedule Appointment Link */}
           <Link
             to="/schedule-appointment"
             aria-label="Schedule a new appointment"
@@ -44,7 +41,6 @@ const ClientHomePage = () => {
             <span className="text-lg">Schedule Appointment</span>
           </Link>
 
-          {/* Session Notes Link */}
           <Link
             to="/client-session-notes"
             aria-label="View your session notes"
@@ -53,7 +49,6 @@ const ClientHomePage = () => {
             <span className="text-lg">Session Notes</span>
           </Link>
 
-          {/* Payment Link */}
           <Link
             to="/payment"
             aria-label="Make a payment"

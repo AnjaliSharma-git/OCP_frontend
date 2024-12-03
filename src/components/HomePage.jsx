@@ -1,13 +1,11 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-
 const HomePage = () => {
   const navigate = useNavigate();
 
   const goToSignup = () => {
     navigate("/signup");
   };
-
   return (
     <div className="bg-gradient-to-t from-purple-400 to-pink-50 min-h-screen mt-0">
       <header className="relative text-gray-800 py-16 px-4 text-center h-[500px] pt-[150px]">

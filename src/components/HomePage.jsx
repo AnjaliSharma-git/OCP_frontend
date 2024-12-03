@@ -1,9 +1,16 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const HomePage = () => {
+  const navigate = useNavigate();
+
+  const goToSignup = () => {
+    navigate("/signup");
+  };
+
   return (
     <div className="bg-gradient-to-t from-purple-400 to-pink-50 min-h-screen mt-0">
-      <header className="relative  text-gray-800 py-16 px-4 text-center h-[500px] pt-[150px]">
+      <header className="relative text-gray-800 py-16 px-4 text-center h-[500px] pt-[150px]">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-5xl font-extrabold leading-tight mb-4">
             Feel Better. <span className="text-pink-500">Live Better.</span>
@@ -16,11 +23,12 @@ const HomePage = () => {
             our services.
           </p>
           <div className="mt-6">
-            <a
-              href="/signup"
-              className="bg-pink-500 text-white font-bold text-lg px-6 py-3 rounded-full shadow-md hover:bg-pink-600 transition">
+            <button
+              onClick={goToSignup}
+              className="bg-pink-500 text-white font-bold text-lg px-6 py-3 rounded-full shadow-md hover:bg-pink-600 transition"
+            >
               Get Started
-            </a>
+            </button>
           </div>
         </div>
       </header>
@@ -69,7 +77,6 @@ const HomePage = () => {
             &copy; {new Date().getFullYear()} Online Counseling Platform. Spread
             Happiness!
           </p>
-
         </div>
       </footer>
     </div>

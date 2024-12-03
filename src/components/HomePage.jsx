@@ -17,7 +17,7 @@ const HomePage = () => {
           </p>
           <div className="mt-6">
             <a
-              href="https://online-counseling-platform.netlify.app/signup"
+              href="/signup"
               className="bg-pink-500 text-white font-bold text-lg px-6 py-3 rounded-full shadow-md hover:bg-pink-600 transition">
               Get Started
             </a>

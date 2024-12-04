@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import {jwtDecode} from "jwt-decode"; 
+import { jwtDecode } from "jwt-decode";
 
 const SignupPage = () => {
   const [isLoginMode, setIsLoginMode] = useState(false);
@@ -60,22 +60,22 @@ const SignupPage = () => {
       console.log("Form data:", formData);
 
       const response = await axios.post(endpoint, formData);
-      
+
       const { message, token, user } = response.data;
       if (message.includes('logged in successfully')) {
         localStorage.setItem('token', token);
         localStorage.setItem('user', JSON.stringify(user));
 
         const decodedToken = jwtDecode(token);
-        sessionStorage.setItem("userId", decodedToken.id); 
-        
+        sessionStorage.setItem("userId", decodedToken.id);
+
         setTimeout(() => {
           if (role === "client") {
-            navigate("/client-home");  
+            navigate("/client-home");
           } else {
-            navigate("/counselor-home"); 
+            navigate("/counselor-home");
           }
-        }, 100);  
+        }, 100);
       }
     } catch (error) {
       console.error("Error:", error.response?.data || error.message);

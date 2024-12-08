@@ -9,9 +9,9 @@ const ClientSessionNotesPage = () => {
   useEffect(() => {
     const fetchSessionNotes = async () => {
       try {
-        setLoading(true); 
+        setLoading(true);
 
-        const token = localStorage.getItem('token'); 
+        const token = localStorage.getItem('token');
         if (!token) {
           throw new Error('You must be logged in to view session notes.');
         }
@@ -20,16 +20,24 @@ const ClientSessionNotesPage = () => {
           headers: { Authorization: `Bearer ${token}` },
         });
 
-        setSessionNotes(response.data); 
-        setError(null); 
+        if (response && response.data) {
+          const notes = response.data || [];
+          if (!Array.isArray(notes)) {
+            throw new Error('Received invalid response data. Expected an array.');
+          }
+          setSessionNotes(notes);
+          setError(null);
+        } else {
+          throw new Error('Received invalid data.');
+        }
       } catch (err) {
-        console.error('Error fetching session notes:', err.response || err);
+        console.error('Error fetching session notes:', err.response?.data || err);
         const errorMessage =
           err.response?.data?.message ||
           'Unable to load session notes. Please try again later.';
-        setError(errorMessage); 
+        setError(errorMessage);
       } finally {
-        setLoading(false); 
+        setLoading(false);
       }
     };
 
@@ -50,15 +58,15 @@ const ClientSessionNotesPage = () => {
         <ul className="space-y-4">
           {sessionNotes.map((note) => (
             <li
-              key={note._id}
+              key={note?._id}
               className="p-4 bg-blue-50 border border-blue-200 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
             >
               <p className="text-gray-800 mb-2">
-                <strong>Notes:</strong> {note.text || 'No text notes available.'}
+                <strong>Notes:</strong> {note?.text || 'No text notes available.'}
               </p>
-              {note.file && (
+              {note?.file && (
                 <a
-                  href={`https://ocp-backend-oman.onrender.com/uploads/${note.file}`} 
+                  href={`https://ocp-backend-oman.onrender.com/uploads/${note?.file}`} 
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-blue-500 underline hover:text-blue-700"

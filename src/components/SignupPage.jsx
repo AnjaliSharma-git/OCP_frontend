@@ -29,44 +29,74 @@ const SignupPage = () => {
   }, [role]);
 
   const handleInputChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    if (name && value !== undefined) {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   const validateForm = () => {
     const validationErrors = {};
-    if (!formData.email) validationErrors.email = "Email is required.";
-    if (!formData.password) validationErrors.password = "Password is required.";
-    if (role === "counselor") {
-      if (!formData.specialization) validationErrors.specialization = "Specialization is required.";
-      if (!formData.experience) validationErrors.experience = "Experience is required.";
+
+    if (!formData || !formData.email) {
+      validationErrors.email = "Email is required.";
     }
+
+    if (!formData || !formData.password) {
+      validationErrors.password = "Password is required.";
+    }
+
+    if (role === "counselor") {
+      if (!formData || !formData.specialization) {
+        validationErrors.specialization = "Specialization is required.";
+      }
+
+      if (!formData || !formData.experience) {
+        validationErrors.experience = "Experience is required.";
+      }
+    }
+
     return validationErrors;
   };
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const validationErrors = validateForm();
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      return;
-    }
 
     try {
+      const validationErrors = validateForm();
+      if (Object.keys(validationErrors).length > 0) {
+        setErrors(validationErrors);
+        return;
+      }
+
+      if (!formData) {
+        throw new Error("FormData is undefined.");
+      }
+
       const endpoint = isLoginMode
         ? `https://ocp-backend-oman.onrender.com/auth/login-${role}`
         : `https://ocp-backend-oman.onrender.com/auth/register-${role}`;
 
-      console.log("Sending request to:", endpoint);
-      console.log("Form data:", formData);
-
       const response = await axios.post(endpoint, formData);
+      if (!response || !response.data) {
+        throw new Error("Failed to receive response from server.");
+      }
 
       const { message, token, user } = response.data;
+      if (!message || !token || !user) {
+        throw new Error("Failed to receive valid response from server.");
+      }
+
       if (message.includes('logged in successfully')) {
         localStorage.setItem('token', token);
         localStorage.setItem('user', JSON.stringify(user));
 
         const decodedToken = jwtDecode(token);
+        if (!decodedToken || !decodedToken.id) {
+          throw new Error("Failed to decode token.");
+        }
+
         sessionStorage.setItem("userId", decodedToken.id);
 
         setTimeout(() => {
@@ -79,7 +109,7 @@ const SignupPage = () => {
       }
     } catch (error) {
       console.error("Error:", error.response?.data || error.message);
-      alert(error.response?.data.message || "Something went wrong!");
+      alert(error.response?.data?.message || "Something went wrong!");
     }
   };
 
@@ -200,5 +230,6 @@ const SignupPage = () => {
     </div>
   );
 };
+
 
 export default SignupPage;

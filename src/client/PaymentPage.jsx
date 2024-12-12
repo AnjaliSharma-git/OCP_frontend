@@ -14,25 +14,22 @@ const PaymentPage = () => {
       setError('Please enter a valid amount.');
       return;
     }
-
     setLoading(true);
     setError(null);
 
     try {
       const response = await axios.post('https://ocp-backend-oman.onrender.com/api/create-checkout-session', { amount });
-
       console.log('Backend Response:', response.data);
-
       const { sessionId } = response.data;
 
       if (!sessionId) {
-        setError('Session ID not received.');
+        setError('Session ID not received from the backend.');
         return;
       }
 
       const stripe = await stripePromise;
       const { error: stripeError } = await stripe.redirectToCheckout({
-        sessionId: sessionId,  
+        sessionId: sessionId,
       });
 
       if (stripeError) {
@@ -41,7 +38,7 @@ const PaymentPage = () => {
       }
     } catch (err) {
       console.error('Error processing payment:', err);
-      setError(`Error processing payment: ${err.response ? err.response.data : err.message}`);
+      setError(`Error processing payment: ${err.response ? err.response.data.error : err.message}`);
     } finally {
       setLoading(false);
     }

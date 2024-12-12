@@ -14,7 +14,6 @@ useEffect(() => {
     try {
       // Assuming you have a token stored in localStorage or context
       const token = localStorage.getItem('authToken'); // Or use your preferred method to get the token
-
       const response = await axios.get('https://ocp-backend-oman.onrender.com/api/appointments', {
         headers: {
           'Authorization': `Bearer ${token}`, // Include the token in the Authorization header
@@ -28,7 +27,6 @@ useEffect(() => {
       setLoading(false);
     }
   };
-
   fetchAppointments();
 }, []);
 

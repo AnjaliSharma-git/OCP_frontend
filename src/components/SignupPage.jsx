@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import jwtDecode from "jwt-decode"; // Corrected import
+import { jwtDecode } from "jwt-decode";
 
 const SignupPage = () => {
   const [isLoginMode, setIsLoginMode] = useState(false);
@@ -32,7 +32,6 @@ const SignupPage = () => {
     const { name, value } = e.target;
     if (name && value !== undefined) {
       setFormData((prev) => ({ ...prev, [name]: value }));
-
       // Clear the specific error when user starts typing
       if (errors[name]) {
         setErrors((prev) => {
@@ -63,7 +62,6 @@ const SignupPage = () => {
       }
 
       if (role === "counselor") {
-        // Only validate specialization and experience if they're empty
         if (!formData.specialization) {
           validationErrors.specialization = "Specialization is required.";
         }
@@ -87,18 +85,32 @@ const SignupPage = () => {
         return;
       }
 
+      if (!formData) {
+        throw new Error("FormData is undefined.");
+      }
+
       const endpoint = isLoginMode
         ? `https://ocp-backend-oman.onrender.com/auth/login-${role}`
         : `https://ocp-backend-oman.onrender.com/auth/register-${role}`;
       const response = await axios.post(endpoint, formData);
+      if (!response || !response.data) {
+        throw new Error("Failed to receive response from server.");
+      }
 
       const { message, token, user } = response.data;
+      if (!message || !token || !user) {
+        throw new Error("Failed to receive valid response from server.");
+      }
 
       if (message.includes("logged in successfully")) {
         localStorage.setItem("token", token);
         localStorage.setItem("user", JSON.stringify(user));
 
         const decodedToken = jwtDecode(token);
+        if (!decodedToken || !decodedToken.id) {
+          throw new Error("Failed to decode token.");
+        }
+
         sessionStorage.setItem("userId", decodedToken.id);
 
         setTimeout(() => {
@@ -158,9 +170,7 @@ const SignupPage = () => {
                 name="name"
                 value={formData.name}
                 onChange={handleInputChange}
-                className={`w-full border ${
-                  errors.name ? "border-red-500" : "border-gray-300"
-                } rounded-lg p-2 focus:outline-none focus:ring focus:ring-yellow-200`}
+                className={`w-full border ${errors.name ? "border-red-500" : "border-gray-300"} rounded-lg p-2 focus:outline-none focus:ring focus:ring-yellow-200`}
               />
               {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
             </div>
@@ -173,9 +183,7 @@ const SignupPage = () => {
               name="email"
               value={formData.email}
               onChange={handleInputChange}
-              className={`w-full border ${
-                errors.email ? "border-red-500" : "border-gray-300"
-              } rounded-lg p-2 focus:outline-none focus:ring focus:ring-yellow-200`}
+              className={`w-full border ${errors.email ? "border-red-500" : "border-gray-300"} rounded-lg p-2 focus:outline-none focus:ring focus:ring-yellow-200`}
             />
             {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
           </div>
@@ -186,9 +194,7 @@ const SignupPage = () => {
               name="password"
               value={formData.password}
               onChange={handleInputChange}
-              className={`w-full border ${
-                errors.password ? "border-red-500" : "border-gray-300"
-              } rounded-lg p-2 focus:outline-none focus:ring focus:ring-yellow-200`}
+              className={`w-full border ${errors.password ? "border-red-500" : "border-gray-300"} rounded-lg p-2 focus:outline-none focus:ring focus:ring-yellow-200`}
             />
             {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
           </div>
@@ -202,13 +208,9 @@ const SignupPage = () => {
                   name="specialization"
                   value={formData.specialization}
                   onChange={handleInputChange}
-                  className={`w-full border ${
-                    errors.specialization ? "border-red-500" : "border-gray-300"
-                  } rounded-lg p-2 focus:outline-none focus:ring focus:ring-yellow-200`}
+                  className={`w-full border ${errors.specialization ? "border-red-500" : "border-gray-300"} rounded-lg p-2 focus:outline-none focus:ring focus:ring-yellow-200`}
                 />
-                {errors.specialization && (
-                  <p className="text-red-500 text-sm mt-1">{errors.specialization}</p>
-                )}
+                {errors.specialization && <p className="text-red-500 text-sm mt-1">{errors.specialization}</p>}
               </div>
               <div>
                 <label className="block text-gray-700 font-medium mb-1">Experience</label>
@@ -217,20 +219,16 @@ const SignupPage = () => {
                   name="experience"
                   value={formData.experience}
                   onChange={handleInputChange}
-                  className={`w-full border ${
-                    errors.experience ? "border-red-500" : "border-gray-300"
-                  } rounded-lg p-2 focus:outline-none focus:ring focus:ring-yellow-200`}
+                  className={`w-full border ${errors.experience ? "border-red-500" : "border-gray-300"} rounded-lg p-2 focus:outline-none focus:ring focus:ring-yellow-200`}
                 />
-                {errors.experience && (
-                  <p className="text-red-500 text-sm mt-1">{errors.experience}</p>
-                )}
+                {errors.experience && <p className="text-red-500 text-sm mt-1">{errors.experience}</p>}
               </div>
             </>
           )}
 
           <button
             type="submit"
-            className="w-full bg-pink-500 text-white py-2 px-4 rounded-lg font-medium hover:bg-pink-600"
+            className="w-full bg-pink-500 text-white py-2 px-4 rounded-lg font-medium"
           >
             {isLoginMode ? "Login" : "Register"}
           </button>

@@ -8,28 +8,36 @@ const CounselorHomePage = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
-useEffect(() => {
-  const fetchAppointments = async () => {
-    setLoading(true);
-    try {
-      // Assuming you have a token stored in localStorage or context
-      const token = localStorage.getItem('authToken'); // Or use your preferred method to get the token
-      const response = await axios.get('https://ocp-backend-oman.onrender.com/api/appointments', {
-        headers: {
-          'Authorization': `Bearer ${token}`, // Include the token in the Authorization header
-        },
-      });
-      setAppointments(response.data);
-      setLoading(false);
-    } catch (error) {
-      console.error('Error fetching appointments:', error);
-      setError('Unable to load appointments. Please try again later.');
-      setLoading(false);
-    }
-  };
-  fetchAppointments();
-}, []);
+  useEffect(() => {
+    const fetchAppointments = async () => {
+      setLoading(true);
+      try {
+        // Retrieve the token and user information from localStorage
+        const token = localStorage.getItem('token');
+        const user = JSON.parse(localStorage.getItem('user'));
 
+        if (!token || !user) {
+          throw new Error('No authentication found');
+        }
+
+        // Fetch appointments specifically for the logged-in counselor
+        const response = await axios.get(`https://ocp-backend-oman.onrender.com/api/counselor-appointments/${user._id}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+
+        setAppointments(response.data);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching appointments:', error);
+        setError(error.response?.data?.message || 'Unable to load appointments. Please try again later.');
+        setLoading(false);
+      }
+    };
+
+    fetchAppointments();
+  }, []);
 
   const handleActionClick = (appointment) => {
     if (appointment.sessionType === 'video_call') {
@@ -37,7 +45,7 @@ useEffect(() => {
     } else if (appointment.sessionType === 'chat') {
       return;
     } else if (appointment.sessionType === 'email') {
-      window.location.href = `mailto:${appointment.counselor?.email}`;
+      window.location.href = `mailto:${appointment.client?.email}`;
     } else {
       alert('Invalid session type.');
     }
@@ -74,7 +82,7 @@ useEffect(() => {
 
                     <div className="flex flex-wrap gap-4">
                       <Link
-                        to={`/session-notes`}
+                        to="/session-notes"
                         className="bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600"
                       >
                         Session Notes

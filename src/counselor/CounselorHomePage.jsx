@@ -21,7 +21,7 @@ const CounselorHomePage = () => {
         }
 
         // Fetch appointments specifically for the logged-in counselor
-        const response = await axios.get(`https://ocp-backend-oman.onrender.com/api/counselor-appointments/${user._id}`, {
+        const response = await axios.get(`https://ocp-backend-oman.onrender.com/api/appointments`, {
           headers: {
             'Authorization': `Bearer ${token}`,
           },

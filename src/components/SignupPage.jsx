@@ -91,9 +91,8 @@ const SignupPage = () => {
       }
 
       const endpoint = isLoginMode
-        ? https://ocp-backend-oman.onrender.com/auth/login-${role}
-        : https://ocp-backend-oman.onrender.com/auth/register-${role};
-
+        ? `https://ocp-backend-oman.onrender.com/auth/login-${role}`
+        :` https://ocp-backend-oman.onrender.com/auth/register-${role}`;
       const response = await axios.post(endpoint, formData);
       if (!response || !response.data) {
         throw new Error("Failed to receive response from server.");

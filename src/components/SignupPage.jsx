@@ -12,7 +12,7 @@ const SignupPage = () => {
     password: "",
     specialization: "",
     experience: "",
-    availability: [{ date: "", startTime: "", endTime: "" }],
+    availability: [],
   });
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
@@ -23,7 +23,7 @@ const SignupPage = () => {
         ...prev,
         specialization: "",
         experience: "",
-        availability: [{ date: "", startTime: "", endTime: "" }],
+        availability: [],
       }));
     }
   }, [role]);
@@ -35,83 +35,76 @@ const SignupPage = () => {
     }
   };
 
-  const handleAddAvailability = () => {
-    setFormData((prev) => ({
-      ...prev,
-      availability: [
-        ...prev.availability,
-        { date: "", startTime: "", endTime: "" },
-      ],
-    }));
-  };
-
-  const handleAvailabilityChange = (index, field, value) => {
-    const updatedAvailability = [...formData.availability];
-    updatedAvailability[index][field] = value;
-    setFormData((prev) => ({ ...prev, availability: updatedAvailability }));
-  };
-
   const validateForm = () => {
     const validationErrors = {};
 
-    if (!formData.email) {
+    if (!formData || !formData.email) {
       validationErrors.email = "Email is required.";
     }
 
-    if (!formData.password) {
+    if (!formData || !formData.password) {
       validationErrors.password = "Password is required.";
     }
 
     if (role === "counselor") {
-      if (!formData.specialization) {
+      if (!formData || !formData.specialization) {
         validationErrors.specialization = "Specialization is required.";
       }
 
-      if (!formData.experience) {
+      if (!formData || !formData.experience) {
         validationErrors.experience = "Experience is required.";
-      }
-
-      if (!formData.availability || formData.availability.length === 0) {
-        validationErrors.availability = "At least one availability slot is required.";
-      } else {
-        formData.availability.forEach((slot, index) => {
-          if (!slot.date || !slot.startTime || !slot.endTime) {
-            validationErrors[`availability_${index}`] =
-              "All fields in availability are required.";
-          }
-        });
       }
     }
 
     return validationErrors;
   };
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const validationErrors = validateForm();
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      return;
-    }
-
     try {
+      const validationErrors = validateForm();
+      if (Object.keys(validationErrors).length > 0) {
+        setErrors(validationErrors);
+        return;
+      }
+
+      if (!formData) {
+        throw new Error("FormData is undefined.");
+      }
+
       const endpoint = isLoginMode
         ? `https://ocp-backend-oman.onrender.com/auth/login-${role}`
         : `https://ocp-backend-oman.onrender.com/auth/register-${role}`;
 
       const response = await axios.post(endpoint, formData);
+      if (!response || !response.data) {
+        throw new Error("Failed to receive response from server.");
+      }
 
-      if (response.data && response.data.message && response.data.token && response.data.user) {
-        const { token, user } = response.data;
-        localStorage.setItem("token", token);
-        localStorage.setItem("user", JSON.stringify(user));
+      const { message, token, user } = response.data;
+      if (!message || !token || !user) {
+        throw new Error("Failed to receive valid response from server.");
+      }
+
+      if (message.includes('logged in successfully')) {
+        localStorage.setItem('token', token);
+        localStorage.setItem('user', JSON.stringify(user));
 
         const decodedToken = jwtDecode(token);
+        if (!decodedToken || !decodedToken.id) {
+          throw new Error("Failed to decode token.");
+        }
+
         sessionStorage.setItem("userId", decodedToken.id);
 
         setTimeout(() => {
-          navigate(role === "client" ? "/client-home" : "/counselor-home");
+          if (role === "client") {
+            navigate("/client-home");
+          } else {
+            navigate("/counselor-home");
+          }
         }, 100);
       }
     } catch (error) {
@@ -136,7 +129,7 @@ const SignupPage = () => {
                   name="role"
                   value="client"
                   checked={role === "client"}
-                  onChange={(e) => setRole("client")}
+                  onChange={(e) => setRole(e.target.value)}
                   className="mr-2"
                 />
                 Client
@@ -147,7 +140,7 @@ const SignupPage = () => {
                   name="role"
                   value="counselor"
                   checked={role === "counselor"}
-                  onChange={(e) => setRole("counselor")}
+                  onChange={(e) => setRole(e.target.value)}
                   className="mr-2"
                 />
                 Counselor
@@ -216,47 +209,6 @@ const SignupPage = () => {
                 />
                 {errors.experience && <p className="text-red-500 text-sm mt-1">{errors.experience}</p>}
               </div>
-
-              <h3 className="text-lg font-semibold mt-4">Availability</h3>
-              {formData.availability.map((slot, index) => (
-                <div key={index} className="flex items-center space-x-4 mb-2">
-                  <div>
-                    <label className="block text-gray-700 text-sm mb-1">Date</label>
-                    <input
-                      type="date"
-                      value={slot.date}
-                      onChange={(e) => handleAvailabilityChange(index, "date", e.target.value)}
-                      className="border rounded-lg p-2 w-full"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-gray-700 text-sm mb-1">Start Time</label>
-                    <input
-                      type="time"
-                      value={slot.startTime}
-                      onChange={(e) => handleAvailabilityChange(index, "startTime", e.target.value)}
-                      className="border rounded-lg p-2 w-full"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-gray-700 text-sm mb-1">End Time</label>
-                    <input
-                      type="time"
-                      value={slot.endTime}
-                      onChange={(e) => handleAvailabilityChange(index, "endTime", e.target.value)}
-                      className="border rounded-lg p-2 w-full"
-                    />
-                  </div>
-                </div>
-              ))}
-              <button
-                type="button"
-                onClick={handleAddAvailability}
-                className="text-blue-500 hover:text-blue-600 mt-2"
-              >
-                + Add Availability
-              </button>
-              {errors.availability && <p className="text-red-500 text-sm mt-2">{errors.availability}</p>}
             </>
           )}
 
@@ -270,10 +222,7 @@ const SignupPage = () => {
 
         <p className="text-center text-sm mt-4">
           {isLoginMode ? "Don't have an account? " : "Already have an account? "}
-          <button
-            onClick={() => setIsLoginMode(!isLoginMode)}
-            className="text-pink-500 hover:text-pink-600 font-semibold"
-          >
+          <button onClick={() => setIsLoginMode(!isLoginMode)} className="text-pink-500 hover:text-pink-600 font-semibold">
             {isLoginMode ? "Sign Up" : "Login"}
           </button>
         </p>
@@ -281,5 +230,6 @@ const SignupPage = () => {
     </div>
   );
 };
+
 
 export default SignupPage;

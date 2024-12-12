@@ -8,22 +8,30 @@ const CounselorHomePage = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchAppointments = async () => {
-      setLoading(true);
-      try {
-        const response = await axios.get('https://ocp-backend-oman.onrender.com/api/appointments');
-        setAppointments(response.data);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching appointments:', error);
-        setError('Unable to load appointments. Please try again later.');
-        setLoading(false);
-      }
-    };
+useEffect(() => {
+  const fetchAppointments = async () => {
+    setLoading(true);
+    try {
+      // Assuming you have a token stored in localStorage or context
+      const token = localStorage.getItem('authToken'); // Or use your preferred method to get the token
 
-    fetchAppointments();
-  }, []);
+      const response = await axios.get('https://ocp-backend-oman.onrender.com/api/appointments', {
+        headers: {
+          'Authorization': `Bearer ${token}`, // Include the token in the Authorization header
+        },
+      });
+      setAppointments(response.data);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching appointments:', error);
+      setError('Unable to load appointments. Please try again later.');
+      setLoading(false);
+    }
+  };
+
+  fetchAppointments();
+}, []);
+
 
   const handleActionClick = (appointment) => {
     if (appointment.sessionType === 'video_call') {

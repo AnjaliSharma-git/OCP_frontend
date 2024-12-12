@@ -35,6 +35,29 @@ const SignupPage = () => {
     }
   };
 
+  const handleAddAvailability = () => {
+    setFormData((prev) => ({
+      ...prev,
+      availability: [
+        ...prev.availability,
+        { date: "", startTime: "", endTime: "" },
+      ],
+    }));
+  };
+
+  const handleAvailabilityChange = (index, field, value) => {
+    const updatedAvailability = [...formData.availability];
+    updatedAvailability[index][field] = value;
+    setFormData((prev) => ({ ...prev, availability: updatedAvailability }));
+  };
+
+  const handleRemoveAvailability = (index) => {
+    const updatedAvailability = formData.availability.filter(
+      (_, i) => i !== index
+    );
+    setFormData((prev) => ({ ...prev, availability: updatedAvailability }));
+  };
+
   const validateForm = () => {
     const validationErrors = {};
 
@@ -54,11 +77,21 @@ const SignupPage = () => {
       if (!formData || !formData.experience) {
         validationErrors.experience = "Experience is required.";
       }
+
+      if (!formData.availability || formData.availability.length === 0) {
+        validationErrors.availability = "At least one availability slot is required.";
+      } else {
+        formData.availability.forEach((slot, index) => {
+          if (!slot.date || !slot.startTime || !slot.endTime) {
+            validationErrors[`availability_${index}`] =
+              "All fields in availability are required.";
+          }
+        });
+      }
     }
 
     return validationErrors;
   };
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -88,9 +121,9 @@ const SignupPage = () => {
         throw new Error("Failed to receive valid response from server.");
       }
 
-      if (message.includes('logged in successfully')) {
-        localStorage.setItem('token', token);
-        localStorage.setItem('user', JSON.stringify(user));
+      if (message.includes("logged in successfully")) {
+        localStorage.setItem("token", token);
+        localStorage.setItem("user", JSON.stringify(user));
 
         const decodedToken = jwtDecode(token);
         if (!decodedToken || !decodedToken.id) {
@@ -156,7 +189,9 @@ const SignupPage = () => {
                 name="name"
                 value={formData.name}
                 onChange={handleInputChange}
-                className={`w-full border ${errors.name ? "border-red-500" : "border-gray-300"} rounded-lg p-2 focus:outline-none focus:ring focus:ring-yellow-200`}
+                className={`w-full border ${
+                  errors.name ? "border-red-500" : "border-gray-300"
+                } rounded-lg p-2 focus:outline-none focus:ring focus:ring-yellow-200`}
               />
               {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
             </div>
@@ -169,7 +204,9 @@ const SignupPage = () => {
               name="email"
               value={formData.email}
               onChange={handleInputChange}
-              className={`w-full border ${errors.email ? "border-red-500" : "border-gray-300"} rounded-lg p-2 focus:outline-none focus:ring focus:ring-yellow-200`}
+              className={`w-full border ${
+                errors.email ? "border-red-500" : "border-gray-300"
+              } rounded-lg p-2 focus:outline-none focus:ring focus:ring-yellow-200`}
             />
             {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
           </div>
@@ -180,7 +217,9 @@ const SignupPage = () => {
               name="password"
               value={formData.password}
               onChange={handleInputChange}
-              className={`w-full border ${errors.password ? "border-red-500" : "border-gray-300"} rounded-lg p-2 focus:outline-none focus:ring focus:ring-yellow-200`}
+              className={`w-full border ${
+                errors.password ? "border-red-500" : "border-gray-300"
+              } rounded-lg p-2 focus:outline-none focus:ring focus:ring-yellow-200`}
             />
             {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
           </div>
@@ -194,9 +233,13 @@ const SignupPage = () => {
                   name="specialization"
                   value={formData.specialization}
                   onChange={handleInputChange}
-                  className={`w-full border ${errors.specialization ? "border-red-500" : "border-gray-300"} rounded-lg p-2 focus:outline-none focus:ring focus:ring-yellow-200`}
+                  className={`w-full border ${
+                    errors.specialization ? "border-red-500" : "border-gray-300"
+                  } rounded-lg p-2 focus:outline-none focus:ring focus:ring-yellow-200`}
                 />
-                {errors.specialization && <p className="text-red-500 text-sm mt-1">{errors.specialization}</p>}
+                {errors.specialization && (
+                  <p className="text-red-500 text-sm mt-1">{errors.specialization}</p>
+                )}
               </div>
               <div>
                 <label className="block text-gray-700 font-medium mb-1">Experience</label>
@@ -205,10 +248,70 @@ const SignupPage = () => {
                   name="experience"
                   value={formData.experience}
                   onChange={handleInputChange}
-                  className={`w-full border ${errors.experience ? "border-red-500" : "border-gray-300"} rounded-lg p-2 focus:outline-none focus:ring focus:ring-yellow-200`}
+                  className={`w-full border ${
+                    errors.experience ? "border-red-500" : "border-gray-300"
+                  } rounded-lg p-2 focus:outline-none focus:ring focus:ring-yellow-200`}
                 />
-                {errors.experience && <p className="text-red-500 text-sm mt-1">{errors.experience}</p>}
+                {errors.experience && (
+                  <p className="text-red-500 text-sm mt-1">{errors.experience}</p>
+                )}
               </div>
+
+              <h3 className="text-lg font-semibold mt-4">Availability</h3>
+              {formData.availability.map((slot, index) => (
+                <div key={index} className="flex items-center space-x-4 mb-2">
+                  <div>
+                    <label className="block text-gray-700 text-sm mb-1">Date</label>
+                    <input
+                      type="date"
+                      value={slot.date}
+                      onChange={(e) =>
+                        handleAvailabilityChange(index, "date", e.target.value)
+                      }
+                      className="border rounded-lg p-2 w-full"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-gray-700 text-sm mb-1">Start Time</label>
+                    <input
+                      type="time"
+                      value={slot.startTime}
+                      onChange={(e) =>
+                        handleAvailabilityChange(index, "startTime", e.target.value)
+                      }
+                      className="border rounded-lg p-2 w-full"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-gray-700 text-sm mb-1">End Time</label>
+                    <input
+                      type="time"
+                      value={slot.endTime}
+                      onChange={(e) =>
+                        handleAvailabilityChange(index, "endTime", e.target.value)
+                      }
+                      className="border rounded-lg p-2 w-full"
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveAvailability(index)}
+                    className="text-red-500 hover:text-red-600 ml-2"
+                  >
+                    Remove
+                  </button>
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={handleAddAvailability}
+                className="text-blue-500 hover:text-blue-600 mt-2"
+              >
+                + Add Availability
+              </button>
+              {errors.availability && (
+                <p className="text-red-500 text-sm mt-2">{errors.availability}</p>
+              )}
             </>
           )}
 
@@ -222,7 +325,10 @@ const SignupPage = () => {
 
         <p className="text-center text-sm mt-4">
           {isLoginMode ? "Don't have an account? " : "Already have an account? "}
-          <button onClick={() => setIsLoginMode(!isLoginMode)} className="text-pink-500 hover:text-pink-600 font-semibold">
+          <button
+            onClick={() => setIsLoginMode(!isLoginMode)}
+            className="text-pink-500 hover:text-pink-600 font-semibold"
+          >
             {isLoginMode ? "Sign Up" : "Login"}
           </button>
         </p>
@@ -230,6 +336,5 @@ const SignupPage = () => {
     </div>
   );
 };
-
 
 export default SignupPage;

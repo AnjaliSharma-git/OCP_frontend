@@ -32,26 +32,34 @@ const SignupPage = () => {
     const { name, value } = e.target;
     if (name && value !== undefined) {
       setFormData((prev) => ({ ...prev, [name]: value }));
+        if (errors[name]) {
+        setErrors((prev) => {
+          const newErrors = { ...prev };
+          delete newErrors[name];
+          return newErrors;
+        });
+      }
+
     }
   };
 
   const validateForm = () => {
     const validationErrors = {};
 
-    if (!formData || !formData.email) {
+    if (!formData.email) {
       validationErrors.email = "Email is required.";
     }
 
-    if (!formData || !formData.password) {
+    if (!formData.password) {
       validationErrors.password = "Password is required.";
     }
 
     if (role === "counselor") {
-      if (!formData || !formData.specialization) {
+      if (!formData.specialization) {
         validationErrors.specialization = "Specialization is required.";
       }
 
-      if (!formData || !formData.experience) {
+      if (!formData.experience) {
         validationErrors.experience = "Experience is required.";
       }
     }

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import jwtDecode from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 
 const SignupPage = () => {
   const [isLoginMode, setIsLoginMode] = useState(false);
@@ -12,7 +12,7 @@ const SignupPage = () => {
     password: "",
     specialization: "",
     experience: "",
-    availability: [],
+    availability: [{ date: "", startTime: "", endTime: "" }],
   });
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
@@ -23,17 +23,16 @@ const SignupPage = () => {
         ...prev,
         specialization: "",
         experience: "",
-        availability: [],
+        availability: [{ date: "", startTime: "", endTime: "" }],
       }));
     }
   }, [role]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    if (name && value !== undefined) {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleAddAvailability = () => {
@@ -49,13 +48,6 @@ const SignupPage = () => {
   const handleAvailabilityChange = (index, field, value) => {
     const updatedAvailability = [...formData.availability];
     updatedAvailability[index][field] = value;
-    setFormData((prev) => ({ ...prev, availability: updatedAvailability }));
-  };
-
-  const handleRemoveAvailability = (index) => {
-    const updatedAvailability = formData.availability.filter(
-      (_, i) => i !== index
-    );
     setFormData((prev) => ({ ...prev, availability: updatedAvailability }));
   };
 
@@ -79,7 +71,7 @@ const SignupPage = () => {
         validationErrors.experience = "Experience is required.";
       }
 
-      if (formData.availability.length === 0) {
+      if (!formData.availability || formData.availability.length === 0) {
         validationErrors.availability = "At least one availability slot is required.";
       } else {
         formData.availability.forEach((slot, index) => {
@@ -97,21 +89,21 @@ const SignupPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      const validationErrors = validateForm();
-      if (Object.keys(validationErrors).length > 0) {
-        setErrors(validationErrors);
-        return;
-      }
+    const validationErrors = validateForm();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
 
+    try {
       const endpoint = isLoginMode
         ? `https://ocp-backend-oman.onrender.com/auth/login-${role}`
         : `https://ocp-backend-oman.onrender.com/auth/register-${role}`;
 
       const response = await axios.post(endpoint, formData);
-      const { message, token, user } = response.data;
 
-      if (message.includes("logged in successfully")) {
+      if (response.data && response.data.message && response.data.token && response.data.user) {
+        const { message, token, user } = response.data;
         localStorage.setItem("token", token);
         localStorage.setItem("user", JSON.stringify(user));
 
@@ -255,13 +247,6 @@ const SignupPage = () => {
                       className="border rounded-lg p-2 w-full"
                     />
                   </div>
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveAvailability(index)}
-                    className="text-red-500 hover:text-red-600 ml-2"
-                  >
-                    Remove
-                  </button>
                 </div>
               ))}
               <button

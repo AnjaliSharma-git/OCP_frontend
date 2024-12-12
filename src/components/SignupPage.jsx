@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { jwtDecode } from "jwt-decode";
+import jwtDecode from "jwt-decode";
 
 const SignupPage = () => {
   const [isLoginMode, setIsLoginMode] = useState(false);
@@ -30,9 +30,10 @@ const SignupPage = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    if (name && value !== undefined) {
-      setFormData((prev) => ({ ...prev, [name]: value }));
-    }
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const handleAddAvailability = () => {
@@ -61,24 +62,24 @@ const SignupPage = () => {
   const validateForm = () => {
     const validationErrors = {};
 
-    if (!formData || !formData.email) {
+    if (!formData.email) {
       validationErrors.email = "Email is required.";
     }
 
-    if (!formData || !formData.password) {
+    if (!formData.password) {
       validationErrors.password = "Password is required.";
     }
 
     if (role === "counselor") {
-      if (!formData || !formData.specialization) {
+      if (!formData.specialization) {
         validationErrors.specialization = "Specialization is required.";
       }
 
-      if (!formData || !formData.experience) {
+      if (!formData.experience) {
         validationErrors.experience = "Experience is required.";
       }
 
-      if (!formData.availability || formData.availability.length === 0) {
+      if (formData.availability.length === 0) {
         validationErrors.availability = "At least one availability slot is required.";
       } else {
         formData.availability.forEach((slot, index) => {
@@ -103,41 +104,22 @@ const SignupPage = () => {
         return;
       }
 
-      if (!formData) {
-        throw new Error("FormData is undefined.");
-      }
-
       const endpoint = isLoginMode
         ? `https://ocp-backend-oman.onrender.com/auth/login-${role}`
         : `https://ocp-backend-oman.onrender.com/auth/register-${role}`;
 
       const response = await axios.post(endpoint, formData);
-      if (!response || !response.data) {
-        throw new Error("Failed to receive response from server.");
-      }
-
       const { message, token, user } = response.data;
-      if (!message || !token || !user) {
-        throw new Error("Failed to receive valid response from server.");
-      }
 
       if (message.includes("logged in successfully")) {
         localStorage.setItem("token", token);
         localStorage.setItem("user", JSON.stringify(user));
 
         const decodedToken = jwtDecode(token);
-        if (!decodedToken || !decodedToken.id) {
-          throw new Error("Failed to decode token.");
-        }
-
         sessionStorage.setItem("userId", decodedToken.id);
 
         setTimeout(() => {
-          if (role === "client") {
-            navigate("/client-home");
-          } else {
-            navigate("/counselor-home");
-          }
+          navigate(role === "client" ? "/client-home" : "/counselor-home");
         }, 100);
       }
     } catch (error) {
@@ -189,9 +171,7 @@ const SignupPage = () => {
                 name="name"
                 value={formData.name}
                 onChange={handleInputChange}
-                className={`w-full border ${
-                  errors.name ? "border-red-500" : "border-gray-300"
-                } rounded-lg p-2 focus:outline-none focus:ring focus:ring-yellow-200`}
+                className={`w-full border ${errors.name ? "border-red-500" : "border-gray-300"} rounded-lg p-2 focus:outline-none focus:ring focus:ring-yellow-200`}
               />
               {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
             </div>
@@ -204,9 +184,7 @@ const SignupPage = () => {
               name="email"
               value={formData.email}
               onChange={handleInputChange}
-              className={`w-full border ${
-                errors.email ? "border-red-500" : "border-gray-300"
-              } rounded-lg p-2 focus:outline-none focus:ring focus:ring-yellow-200`}
+              className={`w-full border ${errors.email ? "border-red-500" : "border-gray-300"} rounded-lg p-2 focus:outline-none focus:ring focus:ring-yellow-200`}
             />
             {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
           </div>
@@ -217,9 +195,7 @@ const SignupPage = () => {
               name="password"
               value={formData.password}
               onChange={handleInputChange}
-              className={`w-full border ${
-                errors.password ? "border-red-500" : "border-gray-300"
-              } rounded-lg p-2 focus:outline-none focus:ring focus:ring-yellow-200`}
+              className={`w-full border ${errors.password ? "border-red-500" : "border-gray-300"} rounded-lg p-2 focus:outline-none focus:ring focus:ring-yellow-200`}
             />
             {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
           </div>
@@ -233,13 +209,9 @@ const SignupPage = () => {
                   name="specialization"
                   value={formData.specialization}
                   onChange={handleInputChange}
-                  className={`w-full border ${
-                    errors.specialization ? "border-red-500" : "border-gray-300"
-                  } rounded-lg p-2 focus:outline-none focus:ring focus:ring-yellow-200`}
+                  className={`w-full border ${errors.specialization ? "border-red-500" : "border-gray-300"} rounded-lg p-2 focus:outline-none focus:ring focus:ring-yellow-200`}
                 />
-                {errors.specialization && (
-                  <p className="text-red-500 text-sm mt-1">{errors.specialization}</p>
-                )}
+                {errors.specialization && <p className="text-red-500 text-sm mt-1">{errors.specialization}</p>}
               </div>
               <div>
                 <label className="block text-gray-700 font-medium mb-1">Experience</label>
@@ -248,13 +220,9 @@ const SignupPage = () => {
                   name="experience"
                   value={formData.experience}
                   onChange={handleInputChange}
-                  className={`w-full border ${
-                    errors.experience ? "border-red-500" : "border-gray-300"
-                  } rounded-lg p-2 focus:outline-none focus:ring focus:ring-yellow-200`}
+                  className={`w-full border ${errors.experience ? "border-red-500" : "border-gray-300"} rounded-lg p-2 focus:outline-none focus:ring focus:ring-yellow-200`}
                 />
-                {errors.experience && (
-                  <p className="text-red-500 text-sm mt-1">{errors.experience}</p>
-                )}
+                {errors.experience && <p className="text-red-500 text-sm mt-1">{errors.experience}</p>}
               </div>
 
               <h3 className="text-lg font-semibold mt-4">Availability</h3>
@@ -265,9 +233,7 @@ const SignupPage = () => {
                     <input
                       type="date"
                       value={slot.date}
-                      onChange={(e) =>
-                        handleAvailabilityChange(index, "date", e.target.value)
-                      }
+                      onChange={(e) => handleAvailabilityChange(index, "date", e.target.value)}
                       className="border rounded-lg p-2 w-full"
                     />
                   </div>
@@ -276,9 +242,7 @@ const SignupPage = () => {
                     <input
                       type="time"
                       value={slot.startTime}
-                      onChange={(e) =>
-                        handleAvailabilityChange(index, "startTime", e.target.value)
-                      }
+                      onChange={(e) => handleAvailabilityChange(index, "startTime", e.target.value)}
                       className="border rounded-lg p-2 w-full"
                     />
                   </div>
@@ -287,9 +251,7 @@ const SignupPage = () => {
                     <input
                       type="time"
                       value={slot.endTime}
-                      onChange={(e) =>
-                        handleAvailabilityChange(index, "endTime", e.target.value)
-                      }
+                      onChange={(e) => handleAvailabilityChange(index, "endTime", e.target.value)}
                       className="border rounded-lg p-2 w-full"
                     />
                   </div>
@@ -309,9 +271,7 @@ const SignupPage = () => {
               >
                 + Add Availability
               </button>
-              {errors.availability && (
-                <p className="text-red-500 text-sm mt-2">{errors.availability}</p>
-              )}
+              {errors.availability && <p className="text-red-500 text-sm mt-2">{errors.availability}</p>}
             </>
           )}
 

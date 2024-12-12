@@ -262,21 +262,11 @@ const SignupPage = () => {
 
           <button
             type="submit"
-            className="w-full bg-pink-500 text-white py-2 px-4 rounded-lg font-medium"
+            className="w-full py-2 px-4 bg-yellow-500 text-white font-bold rounded-lg mt-4"
           >
             {isLoginMode ? "Login" : "Register"}
           </button>
         </form>
-
-        <p className="text-center text-sm mt-4">
-          {isLoginMode ? "Don't have an account? " : "Already have an account? "}
-          <button
-            onClick={() => setIsLoginMode(!isLoginMode)}
-            className="text-pink-500 hover:text-pink-600 font-semibold"
-          >
-            {isLoginMode ? "Sign Up" : "Login"}
-          </button>
-        </p>
       </div>
     </div>
   );

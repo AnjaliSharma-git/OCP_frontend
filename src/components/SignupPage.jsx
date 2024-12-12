@@ -51,6 +51,7 @@ const SignupPage = () => {
     setFormData((prev) => ({ ...prev, availability: updatedAvailability }));
   };
 
+
   const validateForm = () => {
     const validationErrors = {};
 

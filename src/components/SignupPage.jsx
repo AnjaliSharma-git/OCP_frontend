@@ -12,7 +12,13 @@ const SignupPage = () => {
     password: "",
     specialization: "",
     experience: "",
-    availability: [],
+    availability: [
+      {
+        date: "",
+        startTime: "",
+        endTime: "",
+      },
+    ],
   });
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
@@ -35,27 +41,13 @@ const SignupPage = () => {
     }
   };
 
-  const handleAddAvailability = () => {
+  const handleAvailabilityChange = (field, value) => {
     setFormData((prev) => ({
       ...prev,
-      availability: [
-        ...prev.availability,
-        { date: "", startTime: "", endTime: "" },
-      ],
+      availability: prev.availability.map((slot, index) =>
+        index === 0 ? { ...slot, [field]: value } : slot
+      ),
     }));
-  };
-
-  const handleAvailabilityChange = (index, field, value) => {
-    const updatedAvailability = [...formData.availability];
-    updatedAvailability[index][field] = value;
-    setFormData((prev) => ({ ...prev, availability: updatedAvailability }));
-  };
-
-  const handleRemoveAvailability = (index) => {
-    const updatedAvailability = formData.availability.filter(
-      (_, i) => i !== index
-    );
-    setFormData((prev) => ({ ...prev, availability: updatedAvailability }));
   };
 
   const validateForm = () => {
@@ -79,14 +71,12 @@ const SignupPage = () => {
       }
 
       if (!formData.availability || formData.availability.length === 0) {
-        validationErrors.availability = "At least one availability slot is required.";
+        validationErrors.availability = "Availability is required.";
       } else {
-        formData.availability.forEach((slot, index) => {
-          if (!slot.date || !slot.startTime || !slot.endTime) {
-            validationErrors[`availability_${index}`] =
-              "All fields in availability are required.";
-          }
-        });
+        const slot = formData.availability[0];
+        if (!slot.date || !slot.startTime || !slot.endTime) {
+          validationErrors.availability = "All availability fields are required.";
+        }
       }
     }
 
@@ -258,57 +248,35 @@ const SignupPage = () => {
               </div>
 
               <h3 className="text-lg font-semibold mt-4">Availability</h3>
-              {formData.availability.map((slot, index) => (
-                <div key={index} className="flex items-center space-x-4 mb-2">
-                  <div>
-                    <label className="block text-gray-700 text-sm mb-1">Date</label>
-                    <input
-                      type="date"
-                      value={slot.date}
-                      onChange={(e) =>
-                        handleAvailabilityChange(index, "date", e.target.value)
-                      }
-                      className="border rounded-lg p-2 w-full"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-gray-700 text-sm mb-1">Start Time</label>
-                    <input
-                      type="time"
-                      value={slot.startTime}
-                      onChange={(e) =>
-                        handleAvailabilityChange(index, "startTime", e.target.value)
-                      }
-                      className="border rounded-lg p-2 w-full"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-gray-700 text-sm mb-1">End Time</label>
-                    <input
-                      type="time"
-                      value={slot.endTime}
-                      onChange={(e) =>
-                        handleAvailabilityChange(index, "endTime", e.target.value)
-                      }
-                      className="border rounded-lg p-2 w-full"
-                    />
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveAvailability(index)}
-                    className="text-red-500 hover:text-red-600 ml-2"
-                  >
-                    Remove
-                  </button>
+              <div className="space-y-2">
+                <div>
+                  <label className="block text-gray-700 text-sm mb-1">Date</label>
+                  <input
+                    type="date"
+                    value={formData.availability[0]?.date || ""}
+                    onChange={(e) => handleAvailabilityChange("date", e.target.value)}
+                    className="border rounded-lg p-2 w-full"
+                  />
                 </div>
-              ))}
-              <button
-                type="button"
-                onClick={handleAddAvailability}
-                className="text-blue-500 hover:text-blue-600 mt-2"
-              >
-                + Add Availability
-              </button>
+                <div>
+                  <label className="block text-gray-700 text-sm mb-1">Start Time</label>
+                  <input
+                    type="time"
+                    value={formData.availability[0]?.startTime || ""}
+                    onChange={(e) => handleAvailabilityChange("startTime", e.target.value)}
+                    className="border rounded-lg p-2 w-full"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-700 text-sm mb-1">End Time</label>
+                  <input
+                    type="time"
+                    value={formData.availability[0]?.endTime || ""}
+                    onChange={(e) => handleAvailabilityChange("endTime", e.target.value)}
+                    className="border rounded-lg p-2 w-full"
+                  />
+                </div>
+              </div>
               {errors.availability && (
                 <p className="text-red-500 text-sm mt-2">{errors.availability}</p>
               )}

@@ -32,20 +32,21 @@ const SignupPage = () => {
     const { name, value } = e.target;
     if (name && value !== undefined) {
       setFormData((prev) => ({ ...prev, [name]: value }));
-        if (errors[name]) {
+      // Clear the specific error when user starts typing
+      if (errors[name]) {
         setErrors((prev) => {
           const newErrors = { ...prev };
           delete newErrors[name];
           return newErrors;
         });
       }
-
     }
   };
 
   const validateForm = () => {
     const validationErrors = {};
 
+    // Always validate email and password
     if (!formData.email) {
       validationErrors.email = "Email is required.";
     }
@@ -54,19 +55,26 @@ const SignupPage = () => {
       validationErrors.password = "Password is required.";
     }
 
-    if (role === "counselor") {
-      if (!formData.specialization) {
-        validationErrors.specialization = "Specialization is required.";
+    // Validation for registration mode and counselor role
+    if (!isLoginMode) {
+      if (role === "client" && !formData.name) {
+        validationErrors.name = "Name is required.";
       }
 
-      if (!formData.experience) {
-        validationErrors.experience = "Experience is required.";
+      if (role === "counselor") {
+        // Only validate specialization and experience if they're empty
+        if (!formData.specialization) {
+          validationErrors.specialization = "Specialization is required.";
+        }
+
+        if (!formData.experience) {
+          validationErrors.experience = "Experience is required.";
+        }
       }
     }
 
     return validationErrors;
   };
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -83,8 +91,8 @@ const SignupPage = () => {
       }
 
       const endpoint = isLoginMode
-        ? `https://ocp-backend-oman.onrender.com/auth/login-${role}`
-        : `https://ocp-backend-oman.onrender.com/auth/register-${role}`;
+        ? https://ocp-backend-oman.onrender.com/auth/login-${role}
+        : https://ocp-backend-oman.onrender.com/auth/register-${role};
 
       const response = await axios.post(endpoint, formData);
       if (!response || !response.data) {
@@ -164,7 +172,7 @@ const SignupPage = () => {
                 name="name"
                 value={formData.name}
                 onChange={handleInputChange}
-                className={`w-full border ${errors.name ? "border-red-500" : "border-gray-300"} rounded-lg p-2 focus:outline-none focus:ring focus:ring-yellow-200`}
+                className={w-full border ${errors.name ? "border-red-500" : "border-gray-300"} rounded-lg p-2 focus:outline-none focus:ring focus:ring-yellow-200}
               />
               {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
             </div>
@@ -177,7 +185,7 @@ const SignupPage = () => {
               name="email"
               value={formData.email}
               onChange={handleInputChange}
-              className={`w-full border ${errors.email ? "border-red-500" : "border-gray-300"} rounded-lg p-2 focus:outline-none focus:ring focus:ring-yellow-200`}
+              className={w-full border ${errors.email ? "border-red-500" : "border-gray-300"} rounded-lg p-2 focus:outline-none focus:ring focus:ring-yellow-200}
             />
             {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
           </div>
@@ -188,7 +196,7 @@ const SignupPage = () => {
               name="password"
               value={formData.password}
               onChange={handleInputChange}
-              className={`w-full border ${errors.password ? "border-red-500" : "border-gray-300"} rounded-lg p-2 focus:outline-none focus:ring focus:ring-yellow-200`}
+              className={w-full border ${errors.password ? "border-red-500" : "border-gray-300"} rounded-lg p-2 focus:outline-none focus:ring focus:ring-yellow-200}
             />
             {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
           </div>
@@ -202,7 +210,7 @@ const SignupPage = () => {
                   name="specialization"
                   value={formData.specialization}
                   onChange={handleInputChange}
-                  className={`w-full border ${errors.specialization ? "border-red-500" : "border-gray-300"} rounded-lg p-2 focus:outline-none focus:ring focus:ring-yellow-200`}
+                  className={w-full border ${errors.specialization ? "border-red-500" : "border-gray-300"} rounded-lg p-2 focus:outline-none focus:ring focus:ring-yellow-200}
                 />
                 {errors.specialization && <p className="text-red-500 text-sm mt-1">{errors.specialization}</p>}
               </div>
@@ -213,7 +221,7 @@ const SignupPage = () => {
                   name="experience"
                   value={formData.experience}
                   onChange={handleInputChange}
-                  className={`w-full border ${errors.experience ? "border-red-500" : "border-gray-300"} rounded-lg p-2 focus:outline-none focus:ring focus:ring-yellow-200`}
+                  className={w-full border ${errors.experience ? "border-red-500" : "border-gray-300"} rounded-lg p-2 focus:outline-none focus:ring focus:ring-yellow-200}
                 />
                 {errors.experience && <p className="text-red-500 text-sm mt-1">{errors.experience}</p>}
               </div>
@@ -230,7 +238,10 @@ const SignupPage = () => {
 
         <p className="text-center text-sm mt-4">
           {isLoginMode ? "Don't have an account? " : "Already have an account? "}
-          <button onClick={() => setIsLoginMode(!isLoginMode)} className="text-pink-500 hover:text-pink-600 font-semibold">
+          <button 
+            onClick={() => setIsLoginMode(!isLoginMode)} 
+            className="text-pink-500 hover:text-pink-600 font-semibold"
+          >
             {isLoginMode ? "Sign Up" : "Login"}
           </button>
         </p>
@@ -238,6 +249,5 @@ const SignupPage = () => {
     </div>
   );
 };
-
 
 export default SignupPage;

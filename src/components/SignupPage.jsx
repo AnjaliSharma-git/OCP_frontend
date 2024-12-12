@@ -12,13 +12,11 @@ const SignupPage = () => {
     password: "",
     specialization: "",
     experience: "",
-    availability: [
-      {
-        date: "",
-        startTime: "",
-        endTime: "",
-      },
-    ],
+    availability: {
+      date: "",
+      startTime: "",
+      endTime: "",
+    },
   });
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
@@ -29,25 +27,29 @@ const SignupPage = () => {
         ...prev,
         specialization: "",
         experience: "",
-        availability: [],
+        availability: {
+          date: "",
+          startTime: "",
+          endTime: "",
+        },
       }));
     }
   }, [role]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    if (name && value !== undefined) {
+    if (name.startsWith("availability.")) {
+      const field = name.split(".")[1];
+      setFormData((prev) => ({
+        ...prev,
+        availability: {
+          ...prev.availability,
+          [field]: value,
+        },
+      }));
+    } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
     }
-  };
-
-  const handleAvailabilityChange = (field, value) => {
-    setFormData((prev) => ({
-      ...prev,
-      availability: prev.availability.map((slot, index) =>
-        index === 0 ? { ...slot, [field]: value } : slot
-      ),
-    }));
   };
 
   const validateForm = () => {
@@ -70,13 +72,8 @@ const SignupPage = () => {
         validationErrors.experience = "Experience is required.";
       }
 
-      if (!formData.availability || formData.availability.length === 0) {
-        validationErrors.availability = "Availability is required.";
-      } else {
-        const slot = formData.availability[0];
-        if (!slot.date || !slot.startTime || !slot.endTime) {
-          validationErrors.availability = "All availability fields are required.";
-        }
+      if (!formData.availability.date || !formData.availability.startTime || !formData.availability.endTime) {
+        validationErrors.availability = "Complete availability information is required.";
       }
     }
 
@@ -91,10 +88,6 @@ const SignupPage = () => {
       if (Object.keys(validationErrors).length > 0) {
         setErrors(validationErrors);
         return;
-      }
-
-      if (!formData) {
-        throw new Error("FormData is undefined.");
       }
 
       const endpoint = isLoginMode
@@ -179,9 +172,7 @@ const SignupPage = () => {
                 name="name"
                 value={formData.name}
                 onChange={handleInputChange}
-                className={`w-full border ${
-                  errors.name ? "border-red-500" : "border-gray-300"
-                } rounded-lg p-2 focus:outline-none focus:ring focus:ring-yellow-200`}
+                className={`w-full border ${errors.name ? "border-red-500" : "border-gray-300"} rounded-lg p-2 focus:outline-none focus:ring focus:ring-yellow-200`}
               />
               {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
             </div>
@@ -194,9 +185,7 @@ const SignupPage = () => {
               name="email"
               value={formData.email}
               onChange={handleInputChange}
-              className={`w-full border ${
-                errors.email ? "border-red-500" : "border-gray-300"
-              } rounded-lg p-2 focus:outline-none focus:ring focus:ring-yellow-200`}
+              className={`w-full border ${errors.email ? "border-red-500" : "border-gray-300"} rounded-lg p-2 focus:outline-none focus:ring focus:ring-yellow-200`}
             />
             {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
           </div>
@@ -207,9 +196,7 @@ const SignupPage = () => {
               name="password"
               value={formData.password}
               onChange={handleInputChange}
-              className={`w-full border ${
-                errors.password ? "border-red-500" : "border-gray-300"
-              } rounded-lg p-2 focus:outline-none focus:ring focus:ring-yellow-200`}
+              className={`w-full border ${errors.password ? "border-red-500" : "border-gray-300"} rounded-lg p-2 focus:outline-none focus:ring focus:ring-yellow-200`}
             />
             {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
           </div>
@@ -223,13 +210,9 @@ const SignupPage = () => {
                   name="specialization"
                   value={formData.specialization}
                   onChange={handleInputChange}
-                  className={`w-full border ${
-                    errors.specialization ? "border-red-500" : "border-gray-300"
-                  } rounded-lg p-2 focus:outline-none focus:ring focus:ring-yellow-200`}
+                  className={`w-full border ${errors.specialization ? "border-red-500" : "border-gray-300"} rounded-lg p-2 focus:outline-none focus:ring focus:ring-yellow-200`}
                 />
-                {errors.specialization && (
-                  <p className="text-red-500 text-sm mt-1">{errors.specialization}</p>
-                )}
+                {errors.specialization && <p className="text-red-500 text-sm mt-1">{errors.specialization}</p>}
               </div>
               <div>
                 <label className="block text-gray-700 font-medium mb-1">Experience</label>
@@ -238,71 +221,28 @@ const SignupPage = () => {
                   name="experience"
                   value={formData.experience}
                   onChange={handleInputChange}
-                  className={`w-full border ${
-                    errors.experience ? "border-red-500" : "border-gray-300"
-                  } rounded-lg p-2 focus:outline-none focus:ring focus:ring-yellow-200`}
+                  className={`w-full border ${errors.experience ? "border-red-500" : "border-gray-300"} rounded-lg p-2 focus:outline-none focus:ring focus:ring-yellow-200`}
                 />
-                {errors.experience && (
-                  <p className="text-red-500 text-sm mt-1">{errors.experience}</p>
-                )}
+                {errors.experience && <p className="text-red-500 text-sm mt-1">{errors.experience}</p>}
               </div>
-
-              <h3 className="text-lg font-semibold mt-4">Availability</h3>
-              <div className="space-y-2">
-                <div>
-                  <label className="block text-gray-700 text-sm mb-1">Date</label>
-                  <input
-                    type="date"
-                    value={formData.availability[0]?.date || ""}
-                    onChange={(e) => handleAvailabilityChange("date", e.target.value)}
-                    className="border rounded-lg p-2 w-full"
-                  />
-                </div>
-                <div>
-                  <label className="block text-gray-700 text-sm mb-1">Start Time</label>
-                  <input
-                    type="time"
-                    value={formData.availability[0]?.startTime || ""}
-                    onChange={(e) => handleAvailabilityChange("startTime", e.target.value)}
-                    className="border rounded-lg p-2 w-full"
-                  />
-                </div>
-                <div>
-                  <label className="block text-gray-700 text-sm mb-1">End Time</label>
-                  <input
-                    type="time"
-                    value={formData.availability[0]?.endTime || ""}
-                    onChange={(e) => handleAvailabilityChange("endTime", e.target.value)}
-                    className="border rounded-lg p-2 w-full"
-                  />
-                </div>
-              </div>
-              {errors.availability && (
-                <p className="text-red-500 text-sm mt-2">{errors.availability}</p>
-              )}
-            </>
-          )}
-
-          <button
-            type="submit"
-            className="w-full bg-pink-500 text-white py-2 px-4 rounded-lg font-medium"
-          >
-            {isLoginMode ? "Login" : "Register"}
-          </button>
-        </form>
-
-        <p className="text-center text-sm mt-4">
-          {isLoginMode ? "Don't have an account? " : "Already have an account? "}
-          <button
-            onClick={() => setIsLoginMode(!isLoginMode)}
-            className="text-pink-500 hover:text-pink-600 font-semibold"
-          >
-            {isLoginMode ? "Sign Up" : "Login"}
-          </button>
-        </p>
-      </div>
-    </div>
-  );
-};
-
-export default SignupPage;
+              <div>
+                <label className="block text-gray-700 font-medium mb-1">Availability</label>
+                <div className="space-y-2">
+                  <div>
+                    <label className="block text-gray-600 text-sm">Date</label>
+                    <input
+                      type="date"
+                      name="availability.date"
+                      value={formData.availability.date}
+                      onChange={handleInputChange}
+                      className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring focus:ring-yellow-200"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-gray-600 text-sm">Start Time</label>
+                    <input
+                      type="time"
+                      name="availability.startTime"
+                      value={formData.availability.startTime}
+                      onChange={handleInputChange}
+                      className="w-full

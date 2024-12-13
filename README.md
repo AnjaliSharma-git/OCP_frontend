@@ -37,5 +37,5 @@ This project is a full-stack web application designed to provide an online couns
 
 ## Dummy login
 
-- **Counselor** email-anjali@example.com  password-1234
-- **Client** email-rahul@example.com  password-1234
+- **Counselor** email - anjali@example.com  password - 1234
+- **Client** email - rahul@example.com  password - 1234

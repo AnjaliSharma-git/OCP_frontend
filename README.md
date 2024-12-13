@@ -1,4 +1,4 @@
-**Project: Online Counseling Platform**
+*Project: Online Counseling Platform*
 
 This project is a full-stack web application designed to provide an online counseling platform for clients and counselors. The platform facilitates user registration, login, payment processing, and session scheduling. Below are the details to set up, run, and understand the project.
 

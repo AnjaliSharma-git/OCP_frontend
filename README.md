@@ -1,70 +1,77 @@
-# Getting Started with Create React App
+**Project: Online Counseling Platform**
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project is a full-stack web application designed to provide an online counseling platform for clients and counselors. The platform facilitates user registration, login, payment processing, and session scheduling. Below are the details to set up, run, and understand the project.
 
-## Available Scripts
+**Features**
 
-In the project directory, you can run:
+User Roles: Separate functionalities for clients and counselors.
 
-### `npm start`
+Authentication: Login and registration using email and password.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Counselor Features:
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Set availability.
 
-### `npm test`
+View scheduled appointments.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Client Features:
 
-### `npm run build`
+Book counseling sessions.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Make payments using Stripe.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Payment Integration: Secure payment processing with Stripe Checkout.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Responsive Design: Optimized for desktop and mobile using Tailwind CSS.
 
-### `npm run eject`
+Technologies Used
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Frontend
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+React.js with React Router for Single Page Application (SPA) navigation.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Tailwind CSS for UI design.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Backend
 
-## Learn More
+Node.js with Express.js for API development.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Stripe for payment processing.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Database
 
-### Code Splitting
+MongoDB (via Mongoose) for data storage.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Other Tools
 
-### Analyzing the Bundle Size
+JWT (JSON Web Tokens) for authentication.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+dotenv for environment variable management.
 
-### Making a Progressive Web App
+Installation
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+Prerequisites
 
-### Advanced Configuration
+Node.js installed (v14+ recommended).
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+MongoDB server running locally or a MongoDB Atlas connection string.
 
-### Deployment
+A Stripe account for payment processing.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+Steps
 
-### `npm run build` fails to minify
+1. Clone the Repository
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+git clone <repository-url>
+cd <repository-name>
+
+2. Install Dependencies
+
+# Install server dependencies
+cd server
+npm install
+
+# Install client dependencies
+cd ../client
+npm install
+

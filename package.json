@@ -53,6 +53,11 @@
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.49",
     "react-app-rewired": "^2.2.1",
-    "tailwindcss": "^3.4.15"
+    "tailwindcss": "^3.4.15",
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@tailwindcss/forms": "^0.5.7",
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.31",
+    "tailwindcss": "^3.3.5"
   }
 }

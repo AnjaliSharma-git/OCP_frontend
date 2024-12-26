@@ -80,62 +80,65 @@ const SignupPage = () => {
     return validationErrors;
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setIsLoading(true);
 
-    try {
-      const validationErrors = validateForm();
-      if (Object.keys(validationErrors).length > 0) {
-        setErrors(validationErrors);
-        setIsLoading(false);
-        return;
-      }
-
-      const endpoint = isLoginMode
-        ? `https://ocp-backend-oman.onrender.com/auth/login-${role}`
-        : `https://ocp-backend-oman.onrender.com/auth/register-${role}`;
-
-      console.log('Sending request to:', endpoint);
-      console.log('With data:', { ...formData, password: '[REDACTED]' });
-
-      const response = await axios.post(endpoint, formData);
-      console.log('Server response:', response.data);
-
-      const { message, token, user } = response.data;
-
-      if (token) {
-        localStorage.setItem("token", token);
-        localStorage.setItem("user", JSON.stringify(user));
-
-        const decodedToken = jwtDecode(token);
-        if (decodedToken?.id) {
-          sessionStorage.setItem("userId", decodedToken.id);
-          
-          if (role === "client") {
-            navigate("/client-home");
-          } else {
-            navigate("/counselor-home");
-          }
-        }
-      } else {
-        throw new Error("No token received from server");
-      }
-    } catch (error) {
-      console.error('Detailed error:', {
-        status: error.response?.status,
-        statusText: error.response?.statusText,
-        data: error.response?.data,
-        message: error.message
-      });
-      
-      setErrors({
-        submit: error.response?.data?.message || "An error occurred. Please try again."
-      });
-    } finally {
+  try {
+    const validationErrors = validateForm();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
       setIsLoading(false);
+      return;
     }
-  };
+
+    const endpoint = isLoginMode
+      ? `https://ocp-backend-oman.onrender.com/auth/login-${role}`
+      : `https://ocp-backend-oman.onrender.com/auth/register-${role}`;
+
+    console.log('Sending request to:', endpoint);
+    console.log('With data:', { ...formData, password: '[REDACTED]' });
+
+    const response = await axios.post(endpoint, formData);
+    console.log('Server response:', response.data);
+
+    const { token, user } = response.data;
+
+    if (token) {
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
+
+      const decodedToken = jwtDecode(token);
+      if (decodedToken?.id) {
+        sessionStorage.setItem("userId", decodedToken.id);
+        
+        // Show success message before navigation
+        alert(response.data.message || 'Successfully authenticated!');
+        
+        if (role === "client") {
+          navigate("/client-home");
+        } else {
+          navigate("/counselor-home");
+        }
+      }
+    } else {
+      throw new Error("No token received from server");
+    }
+  } catch (error) {
+    console.error('Detailed error:', {
+      status: error.response?.status,
+      statusText: error.response?.statusText,
+      data: error.response?.data,
+      message: error.message
+    });
+    
+    setErrors({
+      submit: error.response?.data?.message || "An error occurred. Please try again."
+    });
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   return (
     <div className="bg-gradient-to-b from-pink-50 to-yellow-50 min-h-screen flex items-center justify-center px-4">

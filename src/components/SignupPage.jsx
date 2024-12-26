@@ -96,11 +96,25 @@ const handleSubmit = async (e) => {
       ? `https://ocp-backend-oman.onrender.com/auth/login-${role}`
       : `https://ocp-backend-oman.onrender.com/auth/register-${role}`;
 
-    console.log('Sending request to:', endpoint);
-    console.log('With data:', { ...formData, password: '[REDACTED]' });
+    // Log the request details
+    console.log('Request details:', {
+      endpoint,
+      method: 'POST',
+      email: formData.email,
+      role: role,
+      isLoginMode: isLoginMode
+    });
 
     const response = await axios.post(endpoint, formData);
-    console.log('Server response:', response.data);
+
+    // Log successful response
+    console.log('Response:', {
+      status: response.status,
+      data: {
+        ...response.data,
+        token: response.data.token ? '[PRESENT]' : '[MISSING]'
+      }
+    });
 
     const { token, user } = response.data;
 
@@ -112,24 +126,25 @@ const handleSubmit = async (e) => {
       if (decodedToken?.id) {
         sessionStorage.setItem("userId", decodedToken.id);
         
-        // Show success message before navigation
-        alert(response.data.message || 'Successfully authenticated!');
-        
         if (role === "client") {
           navigate("/client-home");
         } else {
           navigate("/counselor-home");
         }
       }
-    } else {
-      throw new Error("No token received from server");
     }
   } catch (error) {
-    console.error('Detailed error:', {
+    // Enhanced error logging
+    console.error('Login error details:', {
       status: error.response?.status,
       statusText: error.response?.statusText,
       data: error.response?.data,
-      message: error.message
+      message: error.message,
+      endpoint: error.config?.url,
+      requestData: {
+        ...error.config?.data,
+        password: '[REDACTED]'
+      }
     });
     
     setErrors({
